@@ -14,53 +14,53 @@ const MOCK_DATA_TEST = {
     category: [
         {
             value: 1,
-            label: 'category1'
+            label: 'Freelance'
         },
         {
             value: 2,
-            label: 'category2'
+            label: 'Part Time'
         },
         {
             value: 3,
-            label: 'category3'
+            label: 'Full Time'
         },
         {
             value: 4,
-            label: 'category4'
+            label: 'Internship'
         },
         {
             value: 5,
-            label: 'category5'
+            label: 'Internship1'
         }
     ],
     jobs_des: [
         {
             id: 2,
-            title: 'Title2',
+            title: 'Product Director',
             des: 'Short Destination2',
-            location: 'Location2',
-            timed: 'Timed2'
+            location: 'Ho Chi Minh, Quan 2',
+            timed: '5 hours ago'
         },
         {
             id: 3,
-            title: 'Title3',
+            title: 'Digital Marketing Manager',
             des: 'Short Destination3',
-            location: 'Location3',
-            timed: 'Timed3'
+            location: 'Ho Chi Minh, Quan 1',
+            timed: 'now'
         },
         {
             id: 4,
-            title: 'Title4',
+            title: 'Product Director',
             des: 'Short Destination4',
-            location: 'Location4',
-            timed: 'Timed4'
+            location: 'Ho Chi Minh, Quan 3',
+            timed: '1 minute ago'
         },
         {
             id: 5,
-            title: 'Title5',
+            title: 'Senior Backend Developer',
             des: 'Short Destination5',
-            location: 'Location5',
-            timed: 'Timed5'
+            location: 'Ba Huyen Thanh Quan, Quan 4',
+            timed: '3 hours ago'
         }
     ]
 }
@@ -90,7 +90,7 @@ function JobListing() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#029663',
-                marginBottom: '4.5rem'
+                marginBottom: '2.5rem'
             }}>
                 <Typography 
                     variant='h4' 
@@ -99,7 +99,7 @@ function JobListing() {
                     Job Listing
                 </Typography>
             </Box>
-            <Box marginBottom={'50px'}>
+            <Box marginBottom={'30px'}>
             <Grid container sx={{ width: '90%', margin:'auto'}} spacing={4}>
                 <Grid item xs={9}>
                     <InputField 
@@ -108,7 +108,7 @@ function JobListing() {
                         methods={methods}
                     />
                     <Grid>
-                        <Typography margin={'30px 0'} variant='h5'>Search Results</Typography>
+                        <Typography margin={'45px 0'} variant='h5' fontWeight={600}>Search Results</Typography>
                         {MOCK_DATA_TEST.jobs_des.map(item => <ItemResult 
                             item={item}
                         />)}
