@@ -1,11 +1,14 @@
-import "./App.css";
-import Router from "./routes";
+import React from 'react';
+
+import Router from './routes';
+import ThemeProvider from './theme';
+
 
 function App() {
   return (
-    <div className="App">
+    <ThemeProvider>
       <Router />
-    </div>
+    </ThemeProvider>
   );
 }
 
