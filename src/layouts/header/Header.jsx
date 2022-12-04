@@ -14,6 +14,7 @@ import { Logo } from '../../components';
 import AccountPopover from './AvatarPopover';
 import NotificationPopover from './NotificationPopover';
 import Message from './Message';
+import { LoginForm, SelectDialog } from '../../features/auth';
 
 const APPBAR_MOBILE = 40;
 const APPBAR_DESKTOP = 62;
@@ -46,9 +47,17 @@ const ButtonRegisterStyle = styled(Button)(({ theme }) => ({
     fontSize: '1rem',
 }));
 
+const StackStyle = styled(Stack)(({ theme }) => ({
+    [theme.breakpoints.up('xs')]: {
+        display: 'none',
+    },
+    [theme.breakpoints.up('sm')]: {
+        display: 'block',
+    }
+}))
+
 
 const pages = ['Home', 'About Us', 'Jobs'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const HideOnScroll = (props) => {
     const { children, window } = props;
@@ -64,7 +73,25 @@ const HideOnScroll = (props) => {
 }
 
 const Header = (props) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
+    const [openLogin, setOpenLogin] = useState(false);
+    const [openSelectRegister, setOpenSelectRegister] = useState(false);
+
+    const handleCloseLogin = () => {
+        setOpenLogin(false);
+    };
+
+    const handleClickOpenLogin = () => {
+        setOpenLogin(true);
+    };
+
+    const handleClickOpenSelectRegister = () => {
+        setOpenSelectRegister(true);
+    };
+
+    const handleCloseSelectRegister = () => {
+        setOpenSelectRegister(false);
+    };
 
     return (
         <>
@@ -74,14 +101,14 @@ const Header = (props) => {
                         <Box sx={{ px: 1, py: 1, display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
                             <Logo sx={{ width: '70px', height: '70px' }} display='inline-flex'/>
                         </Box>
-                        <Stack direction='row' spacing={1}>
+                        <StackStyle direction='row' spacing={1}>
                             {pages.map((page) => (<ButtonStyle color='success' key={page}>{page}</ButtonStyle>))}
-                        </Stack>
+                        </StackStyle>
                         {/* <Searchbar /> */}
                         <Box sx={{ flexGrow: 1 }} />
                 
                         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-                            {!user ? (
+                            {user ? (
                                 <>
                                     <Message />
                                     <NotificationPopover />
@@ -91,15 +118,20 @@ const Header = (props) => {
                                 : 
                             (
                                 <>
-                                    {/* <ButtonStyle color='success'>Login</ButtonStyle>
-                                    <ButtonRegisterStyle color='success' variant='contained'>Register</ButtonRegisterStyle> */}
+                                    <ButtonStyle color='success' onClick={handleClickOpenLogin}>Login</ButtonStyle>
+                                    <ButtonRegisterStyle color='success' variant='contained' onClick={handleClickOpenSelectRegister}>Register</ButtonRegisterStyle>
                                 </>
                             )}
                         </Stack>
                     </ToolbarStyle>
                 </RootStyle>
             </HideOnScroll>
-            <Box sx={{ marginBlockEnd: 15 }} />
+            <LoginForm open={openLogin} handleClose={handleCloseLogin} />
+            <SelectDialog
+                open={openSelectRegister}
+                handleClose={handleCloseSelectRegister}
+            />
+            <Box sx={{ marginBlockEnd: 11 }} />
         </>
     );
 };

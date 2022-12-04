@@ -27,7 +27,7 @@ const RHFSelect = ({ name, id, label, data }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field }) => {
+                render={({ field, fieldState: { error } }) => {
                     return (
                             <Select
                                 {...field}
@@ -43,6 +43,8 @@ const RHFSelect = ({ name, id, label, data }) => {
                                 open={open}
                                 displayEmpty={true}
                                 MenuProps={MenuProps}
+                                error={!!error}
+                                helpertext={error?.message}
                             >
                                 {data?.map((item) => (
                                     <MenuItem key={item.id} value={item.id}>

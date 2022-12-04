@@ -11,6 +11,9 @@ import { fYMDate } from '../../utils/formatTime';
 
 const categories = [{ id: 1, name: "Web development" }, { id: 2, name: "Design UI/UX" }];
 
+const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
+    color: '#fff'
+}));
 
 const JobForm = () => {
     const JobSchema = Yup.object().shape({
@@ -82,14 +85,14 @@ const JobForm = () => {
                     <Box
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
-                        <LoadingButton
+                        <LoadingButtonStyle
                             size="large"
                             type="submit"
                             variant="contained"
                             color='success'
                         >
                             Post Now
-                        </LoadingButton>
+                        </LoadingButtonStyle>
                     </Box>
                 </Grid>
             </Grid>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, Box, Typography, Stack } from '@mui/material';
+import { Container, Grid, Box, Typography, Stack, Paper } from '@mui/material';
 import { Logo } from '../components';
 
 const services = ['Find Job', 'Create Post', 'Manage Post', 'Profile'];
@@ -8,7 +8,11 @@ const supports = ['University Of Technology And Education', 'Faculty For High Qu
 
 const Footer = () => {
     return (
-        <footer>
+        <Paper sx={{marginTop: 'calc(5% + 0px)',
+            width: '100%',
+            position: 'relative'
+            }} component="footer" square
+        >
             <Container maxWidth='none' sx={{ bgcolor: '#2b3940'}}>
                 <Grid container sx={{ paddingBlock: 5 }} spacing={0}>
                     <Grid item xs={12} sm={4}>
@@ -21,7 +25,7 @@ const Footer = () => {
                             }}
                         >
                             <Logo sx={{ width: '250px' }} display='inline-block'/>
-                            <Typography variant='h4' color='white' sx={{ paddingBlock: 3 }}>
+                            <Typography variant='h4' color='white' sx={{ paddingBlock: 1 }}>
                                 Contact us at
                             </Typography>
                             <Typography variant='h4' color='#00b074'>
@@ -41,7 +45,7 @@ const Footer = () => {
                                     Services
                                 </Typography>
                                 {services.map((service) => (
-                                    <Typography key={service} variant='body1' color='white'>
+                                    <Typography key={service} variant='by1' color='white'>
                                         {service}
                                     </Typography>
                                 ))}
@@ -51,7 +55,7 @@ const Footer = () => {
                                     Company
                                 </Typography>
                                 {company.map((cmp) => (
-                                    <Typography key={cmp} variant='body1' color='white'>
+                                    <Typography key={cmp} variant='by1' color='white'>
                                         {cmp}
                                     </Typography>
                                 ))}
@@ -61,7 +65,7 @@ const Footer = () => {
                                     Support
                                 </Typography>
                                 {supports.map((support) => (
-                                    <Typography key={support} variant='body1' color='white'>
+                                    <Typography key={support} variant='by1' color='white'>
                                         {support}
                                     </Typography>
                                 ))}
@@ -70,7 +74,7 @@ const Footer = () => {
                     </Grid>
                 </Grid>
             </Container>
-        </footer>
+        </Paper>
     );
 };
 

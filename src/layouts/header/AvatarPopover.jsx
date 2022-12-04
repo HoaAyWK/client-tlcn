@@ -19,6 +19,16 @@ const MENU_OPTIONS = [
       icon: 'eva:settings-2-fill',
       linkTo: 'account',
     },
+    {
+        label: 'Manage Jobs',
+        icon: 'eva:settings-2-fill',
+        linkTo: 'manage-jobs',
+    },
+    {
+        label: 'Create Job',
+        icon: 'eva:settings-2-fill',
+        linkTo: 'create-job',
+    },
 ];
 
 const AccountPopover = ({ user }) => {
