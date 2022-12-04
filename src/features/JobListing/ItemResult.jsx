@@ -11,7 +11,6 @@ import { Icon } from '@iconify/react';
 import bigerpicture from '../../assets/anh-gai-xinh-1.jpg'
 
 function ItemResult(props) {
-    console.log(props)
     const { id, title, des, location, timed } = props.item
     return (
         <Card key={id} sx={{ 
@@ -25,18 +24,32 @@ function ItemResult(props) {
             <CardActionArea sx={{
                 height: '130px', 
                 padding: '20px', 
-                display: 'flex',
-                '&:hover': {
-                    backgroundColor: 'white'
-                }
+                display: 'flex'
             }}>
-                <Box sx={{width: '90px', height: '100%', backgroundColor:'red'}}>
+                <Box sx={{width: '90px', height: '100%'}}>
                     <img src={bigerpicture} alt='...' style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
                 </Box>
                 <Grid container flex={1} alignItems="center" spacing={3} marginLeft={'20px'}>
                     <Grid item xs={3}> 
-                        <Typography variant='h4'>{title}</Typography>
-                        <Typography variant='h5'>{des}</Typography>
+                        <Typography 
+                            style={{
+                                fontFamily: 'system-ui',
+                                color: 'rgb(50 50 50 / 87%)',
+                                fontSize: '25px'
+                            }} 
+                            variant='p'
+                        >
+                            {title}
+                        </Typography>
+                        <Typography
+                            variant='h6'
+                            style={{
+                                fontFamily: 'system-ui',
+                                fontWeight: '200'
+                            }} 
+                        >
+                            {des}
+                        </Typography>
                     </Grid>
                     <Grid item xs={3}>
                         <Icon fontSize='20px' icon="material-symbols:location-on" color="#02af74" inline={true} />
@@ -53,9 +66,10 @@ function ItemResult(props) {
             </CardActionArea>
             <CardActions sx={{
                 display: 'flex', 
+                height: '40px',
                 justifyContent: 'space-between', 
                 alignItem: 'center', 
-                backgroundColor: 'rgb(231, 235, 240)'}}
+                backgroundColor: 'rgb(246, 246, 246)'}}
             >
                 <Typography variant="h6" component="div">
                     Experience :2 - 3 years
