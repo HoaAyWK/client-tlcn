@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 
-import { Home, CreateJob, JobListing } from './pages';
+import { Home, CreateJob, JobListing, JobDetail } from './pages';
 
 import Layout from './layouts/Layout';
 
@@ -15,7 +15,8 @@ const Router = () => {
             children: [
                 { path: '/', element: <Home /> },
                 { path: 'create-job', element: <CreateJob />},
-                { path: 'joblisting', element: <JobListing /> },
+                { path: 'job-listing', element: <JobListing /> },
+                { path: 'job-detail/:id', element: <JobDetail /> },
             ]
         },
     ]);

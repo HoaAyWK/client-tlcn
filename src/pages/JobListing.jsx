@@ -38,28 +38,28 @@ const MOCK_DATA_TEST = {
             id: 2,
             title: 'Product Director',
             des: 'Short Destination2',
-            location: 'Ho Chi Minh, Quan 2',
+            location: 'Ho Chi Minh, District 2',
             timed: '5 hours ago'
         },
         {
             id: 3,
             title: 'Digital Marketing Manager',
             des: 'Short Destination3',
-            location: 'Ho Chi Minh, Quan 1',
+            location: 'Ho Chi Minh, District 1',
             timed: 'now'
         },
         {
             id: 4,
             title: 'Product Director',
             des: 'Short Destination4',
-            location: 'Ho Chi Minh, Quan 3',
+            location: 'Ho Chi Minh, District 3',
             timed: '1 minute ago'
         },
         {
             id: 5,
             title: 'Senior Backend Developer',
             des: 'Short Destination5',
-            location: 'Ba Huyen Thanh Quan, Quan 4',
+            location: 'Ba Huyen Thanh Quan, District 4',
             timed: '3 hours ago'
         }
     ]
@@ -84,23 +84,8 @@ function JobListing() {
 
     return (
         <Box>
-            <Box sx={{
-                height: '300px',
-                display:'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#029663',
-                marginBottom: '2.5rem'
-            }}>
-                <Typography 
-                    variant='h4' 
-                    sx={{color: 'white', fontWeight:'500'}}
-                >
-                    Job Listing
-                </Typography>
-            </Box>
             <Box marginBottom={'30px'}>
-            <Grid container sx={{ width: '90%', margin:'auto'}} spacing={4}>
+            <Grid container sx={{ width: '85%', margin:'auto'}} spacing={4}>
                 <Grid item xs={9}>
                     <InputField 
                         handleSubmit={handleSubmit} 
