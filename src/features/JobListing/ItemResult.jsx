@@ -8,7 +8,7 @@ import {
     Button} from '@mui/material';
 import React from 'react';
 import { Icon } from '@iconify/react';
-import bigerpicture from '../../assets/anh-gai-xinh-1.jpg'
+import LogoCompany from './components/LogoCompany';
 
 function ItemResult(props) {
     const { id, title, des, location, timed } = props.item
@@ -26,9 +26,7 @@ function ItemResult(props) {
                 padding: '20px', 
                 display: 'flex'
             }}>
-                <Box sx={{width: '90px', height: '100%'}}>
-                    <img src={bigerpicture} alt='...' style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
-                </Box>
+                <LogoCompany/>
                 <Grid container flex={1} alignItems="center" spacing={3} marginLeft={'20px'}>
                     <Grid item xs={3}> 
                         <Typography 
