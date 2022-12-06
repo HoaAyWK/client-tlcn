@@ -1,3 +1,4 @@
+import React from 'react';
 import { 
     Box, 
     Card, 
@@ -5,15 +6,18 @@ import {
     CardActions,
     Grid,
     Typography,
-    Button} from '@mui/material';
-import React from 'react';
-import { Icon } from '@iconify/react';
-import LogoCompany from './components/LogoCompany';
+    Stack,
+    Button
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
-function ItemResult(props) {
-    const { id, title, des, location, timed } = props.item
+import LogoCompany from './components/LogoCompany';
+import { Iconify, Label } from '../../components';
+import { fDate } from '../../utils/formatTime';
+
+function ItemResult({ item }) {
     return (
-        <Card key={id} sx={{ 
+        <Card key={item?._id} sx={{ 
             maxWidth: '100%', 
             border: '1px solid #f3f3f3', 
             margin: '45px 0', 
@@ -22,43 +26,78 @@ function ItemResult(props) {
             }}}
         >
             <CardActionArea sx={{
-                height: '130px', 
-                padding: '20px', 
+                minHeight: '130px', 
+                paddingInline: 2, 
                 display: 'flex'
             }}>
-                <LogoCompany/>
-                <Grid container flex={1} alignItems="center" spacing={3} marginLeft={'20px'}>
-                    <Grid item xs={3}> 
-                        <Typography 
-                            style={{
-                                fontFamily: 'system-ui',
-                                color: 'rgb(50 50 50 / 87%)',
-                                fontSize: '25px'
-                            }} 
-                            variant='p'
+                <RouterLink to={`/employers/${item?._id}`}>
+                    <LogoCompany/>
+                </RouterLink>
+                <Grid container flex={1} alignItems="center" spacing={1}>
+                    <Grid item xs={10.5}> 
+                        <Stack spacing={0.5} sx={{ marginInlineStart: 2 }}>
+                            <Typography 
+                                style={{
+                                    fontWeight: 600,
+                                    color: 'rgb(50 50 50 / 87%)',
+                                }} 
+                                variant='body1'
+                            >
+                                {item?.name}
+                            </Typography>
+                            <Typography
+                                component={RouterLink}
+                                to={`/employers/${item._id}`}
+                                variant='body1'
+                                color='text.secondary'
+                                sx={{
+                                    textDecoration: 'none',
+                                    marginInlineStart: 2,
+                                    fontWeight: 600
+                                }}
+                            >
+                                {item?.employer?.companyName}
+                            </Typography>
+                            {item?.categories && (
+                                <Stack direction='row' spacing={1} sx={{ marginInlineStart: 2 }}>
+                                    {item?.categories?.map((cate) => (
+                                        <Label key={cate?._id} variant='contained' color='primary'>
+                                            {cate?.category?.name}
+                                        </Label>
+                                    ))}
+                                </Stack>
+                            )}
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={1.5}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                                width: '100%'
+                            }}
                         >
-                            {title}
-                        </Typography>
-                        <Typography
-                            variant='h6'
-                            style={{
-                                fontFamily: 'system-ui',
-                                fontWeight: '200'
-                            }} 
-                        >
-                            {des}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Icon fontSize='20px' icon="material-symbols:location-on" color="#02af74" inline={true} />
-                        <span style={{fontSize: '20px', marginLeft: '10px', color: '#74788d'}}>{location}</span>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Icon fontSize='25px' icon="ic:round-access-time" color="#02af74" inline={true} />
-                        <span style={{fontSize: '20px', marginLeft: '10px', color: '#74788d'}}>{timed}</span>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <span style={{fontSize: '20px', marginLeft: '10px', color: '#74788d'}}> Things</span>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Iconify
+                                    icon='ph:currency-circle-dollar-duotone'
+                                    style={{ color: '#02af74'}}
+                                    width={28}
+                                    height={28}
+                                />
+                                <Typography variant='body1' color='#74788d' sx={{ fontWeight: '600', marginInlineStart: 0.5 }}>
+                                    {item?.price}
+                                </Typography>
+                            </Box>
+                        </Box>
                     </Grid>
                 </Grid>
             </CardActionArea>
@@ -69,9 +108,24 @@ function ItemResult(props) {
                 alignItem: 'center', 
                 backgroundColor: 'rgb(246, 246, 246)'}}
             >
-                <Typography variant="h6" component="div">
-                    Experience :2 - 3 years
-                </Typography>
+                <Stack spacing={1} direction='row'>
+                    <Iconify icon='uiw:date' width={20} height={20} />
+                    <Typography variant='body2' color='text.secondary'>
+                        Start
+                    </Typography>
+                    <Typography variant='body2'>
+                        {fDate(item?.startDate)}
+                    </Typography>
+                </Stack>
+                <Stack spacing={1} direction='row'>
+                    <Iconify icon='uiw:date' width={20} height={20} />
+                    <Typography variant='body2' color='text.secondary'>
+                        End
+                    </Typography>
+                    <Typography variant='body2'>
+                        {fDate(item?.expireDate)}
+                    </Typography>
+                </Stack>
                 <Button size="small" color="primary">
                     {'Apply Now >>>'}
                 </Button>

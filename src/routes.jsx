@@ -16,7 +16,7 @@ const Router = () => {
                 { path: '/', element: <Home /> },
                 { path: 'profile', element: <Profile /> },
                 { path: 'create-job', element: <CreateJob />},
-                { path: 'job-listing', element: <JobListing /> },
+                { path: 'jobs', element: <JobListing /> },
                 { path: 'job-detail/:id', element: <JobDetail /> },
             ]
         },

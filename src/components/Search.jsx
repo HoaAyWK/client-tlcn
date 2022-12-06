@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { Box, InputBase, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import { Iconify } from '../components';
 
@@ -9,8 +10,10 @@ const SearchArea = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     paddingBlock: 5,
     backgroundColor: alpha(theme.palette.common.white, 1),
+    border: `1px solid ${theme.palette.common.white}`,
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 1),
+        border: `1px solid ${theme.palette.success.dark}`,
     },
     marginLeft: 0,
     width: '100%',
@@ -55,7 +58,21 @@ const ButtonStyle = styled(Button)(({ theme }) => ({
     color: 'white'
 }));
 
-const Search = () => {
+const Search = (props) => {
+    const { page } = props;
+    const ref = useRef();
+    const navigate = useNavigate();
+
+    const handleEnter = (e) => {
+        if (e && e.key === 'Enter') {
+            navigate(`/${page}?keyword=${ref.current.value}`);
+        }
+    };
+
+    const handleClickSearch = () => {
+        navigate(`/${page}?keyword=${ref.current.value}`);
+    };
+
     return (
         <SearchArea>
             <Box
@@ -77,9 +94,18 @@ const Search = () => {
                     <StyledInputBase
                         placeholder="Type Job Title, Keywords"
                         inputProps={{ 'aria-label': 'search' }}
+                        inputRef={ref}
+                        onKeyDown={handleEnter}
                     />
                 </Box>
-                <ButtonStyle color='success' variant='contained' sx={{ marginInlineEnd: 1 }}>SEARCH</ButtonStyle>
+                <ButtonStyle
+                    color='success'
+                    variant='contained'
+                    sx={{ marginInlineEnd: 1 }}
+                    onClick={handleClickSearch}
+                >
+                    SEARCH
+                </ButtonStyle>
             </Box>
         </SearchArea>
     )

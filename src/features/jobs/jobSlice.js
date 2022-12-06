@@ -5,6 +5,9 @@ import { jobApi } from "../../services";
 
 const initialState = {
     createJobStatus: ACTION_STATUS.IDLE,
+    latestJobStatus: ACTION_STATUS.IDLE,
+    latestJobCategories: [], 
+    latestJobs: [],
 };
 
 export const createJob = createAsyncThunk(
@@ -14,6 +17,14 @@ export const createJob = createAsyncThunk(
     }
 );
 
+export const getLatestJobs = createAsyncThunk(
+    'jobs/latestJobs',
+    async () => {
+        const res =  await jobApi.getJobs(5, 1);
+        console.log(res);
+        return res;
+    }
+);
 
 const jobSlice = createSlice({
     name: 'jobs',
@@ -25,6 +36,9 @@ const jobSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+
+            // Create 
+
             .addCase(createJob.pending, (state) => {
                 state.createJobStatus = ACTION_STATUS.LOADING;
             })
@@ -33,6 +47,20 @@ const jobSlice = createSlice({
             })
             .addCase(createJob.rejected, (state) => {
                 state.createJobStatus = ACTION_STATUS.FAILED
+            })
+
+            // Get 8
+
+            .addCase(getLatestJobs.pending, (state) => {
+                state.latestJobStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(getLatestJobs.fulfilled, (state, action) => {
+                state.latestJobStatus = ACTION_STATUS.SUCCESSED;
+                state.latestJobs = action.payload.jobs;
+                state.latestJobCategories = action.payload.categories;
+            })
+            .addCase(getLatestJobs.rejected, (state) => {
+                state.latestJobStatus = ACTION_STATUS.FAILED
             })
     }
 });

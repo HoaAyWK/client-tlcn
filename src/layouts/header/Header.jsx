@@ -89,7 +89,7 @@ const ListItemPostJobStyle = styled((props) => <ListItemButton {...props} />)(({
 }));
 
 
-const pages = [{ name: 'Jobs', path: '/job-listing' }, { name: 'About Us', path: '/#' }];
+const pages = [{ name: 'Jobs', path: '/jobs' }, { name: 'About Us', path: '/#' }];
 
 const HideOnScroll = (props) => {
     const { children, window } = props;

@@ -1,10 +1,11 @@
+import React from 'react';
 import {
     Grid, 
     IconButton, 
     InputAdornment} from '@mui/material';
-import React from 'react';
 import { Icon } from '@iconify/react';
 import { FormProvider, RHFTextField } from '../../components/hook-form';
+
 function InputField({handleSubmit, onSubmit, methods}) {
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -19,6 +20,11 @@ function InputField({handleSubmit, onSubmit, methods}) {
                                 </IconButton>
                             </InputAdornment>
                             )
+                        }}
+                        onKeyDown={(e) => {
+                            if (e && e.key === 'Enter') {
+                                handleSubmit(onSubmit);
+                            }
                         }}
                     />
                 </Grid>

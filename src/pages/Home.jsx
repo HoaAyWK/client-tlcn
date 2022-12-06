@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react';
-import { Stack, Container, Typography, Box, Grid, InputBase, Button } from '@mui/material';
+import { Stack, Container, Typography, Box, Grid, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Page, Search } from '../components';
 import CategoryItem from '../features/categories/CategoryItem';
 import { getCategories, selectAllCategories } from '../features/categories/categorySlice';
-import { ACTION_STATUS } from '../constants';
+import { ACTION_STATUS, ROLES } from '../constants';
+import GuestBanner from '../features/home/GuestBanner';
+import EmployerBanner from '../features/home/EmployerBanner';
+import LatestJobsList from '../features/jobs/LatestJobsList';
+import TopListFreelancer from '../features/freelancers/TopListFreelancer';
 
 
 const Home = () => {
     const categories = useSelector(selectAllCategories);
     const { status: loadCategoriesStatus, countPerCates } = useSelector(state => state.categories);
+    const { user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         if (loadCategoriesStatus === ACTION_STATUS.IDLE) {
@@ -21,42 +27,17 @@ const Home = () => {
 
     return (
         <Page title='Home'>
-            <Box
-                sx={{
-                    width: '100%',
-                    position: 'relative',
-                    zIndex: 1,
-                    backgroundColor: '#edf8f5',
-                    paddingBlockStart: -15
-                }}
-            >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        height: '100%'
-                    }}
-                >
-                    <Box component={'img'} sx={{ height: '100%', objectFit: 'cover' }} src='/static/images/bg-home.png' />
-                </Box>
-                <Container maxWidth='lg'>
-                    <Grid container sx={{ padding: '6.25rem 1rem 12.5rem 1rem', position: 'relative'}}>
-                        <Grid item xs={12} sm={5}>
-                            <Stack spacing={2}>
-                                <Typography style={{ fontSize: '2.5rem', fontWeight: 600 }}>
-                                    Find the most existing jobs.
-                                </Typography>
-                                <Typography color='text.secondary' sx={{ fontSize: '1rem', fontWeight: 500}}>
-                                    Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative to
-                                </Typography>
-                                <Search />
-                            </Stack>
-                        </Grid>
-                        <Grid item xs={12} sm={7} />
-                    </Grid>
-                </Container>
-            </Box>
+            {user?.role === ROLES.EMPLOYER ? (
+                <>
+                    <EmployerBanner page='freelancers' />
+                    <TopListFreelancer />
+                </>
+            ) : (
+                <>
+                    <GuestBanner page='jobs' />
+                    <LatestJobsList />
+                </>
+            )}
             <Container maxWidth='lg'>
                 <Box
                     sx={{

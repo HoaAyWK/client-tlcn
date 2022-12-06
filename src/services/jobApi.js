@@ -7,7 +7,7 @@ class JobApi {
     };
 
     getJobs = (num, page) => {
-        const url = `job/show?num={num}&page={page}`;
+        const url = `/job/show?num=${num}&page=${page}`;
         return axiosClient.get(url);
     };
 };
