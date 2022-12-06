@@ -6,3 +6,4 @@ export { default as MenuPopover } from './MenuPopover';
 export { default as Scrollbar } from './Scrollbar';
 export { default as Page } from './Page';
 export { default as Search } from './Search';
+export { default as Loading } from './Loading';

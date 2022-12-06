@@ -1,7 +1,7 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, Navigate } from 'react-router-dom';
 
-import { Home, CreateJob, JobListing, JobDetail, Profile } from './pages';
+import { Home, CreateJob, JobListing, JobDetail, Profile, NotFound } from './pages';
 
 import Layout from './layouts/Layout';
 
@@ -20,6 +20,14 @@ const Router = () => {
                 { path: 'job-detail/:id', element: <JobDetail /> },
             ]
         },
+        {
+            path: '/404',
+            element: <NotFound />
+        },
+        {
+            path: '*',
+            element: <Navigate to="/404" replace />,
+        }
     ]);
 };
 

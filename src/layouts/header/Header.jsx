@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     AppBar,
     Button,
@@ -6,15 +6,22 @@ import {
     Toolbar,
     Stack,
     Slide,
-    useScrollTrigger
+    useScrollTrigger,
+    ListItemButton,
 } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 
 import { Logo } from '../../components';
 import AccountPopover from './AvatarPopover';
 import NotificationPopover from './NotificationPopover';
 import Message from './Message';
 import { LoginForm, SelectDialog } from '../../features/auth';
+import { useLocalStorage } from '../../hooks';
+import { ACTION_STATUS, ROLES } from '../../constants';
+import { getCurrentUser } from '../../features/auth/authSlice';
 
 const APPBAR_MOBILE = 40;
 const APPBAR_DESKTOP = 62;
@@ -40,7 +47,7 @@ const ButtonStyle = styled(Button)(({ theme }) => ({
     fontSize: '1rem',
 }));
 
-const ButtonRegisterStyle = styled(Button)(({ theme }) => ({
+const ButtonContainedStyle = styled(Button)(({ theme }) => ({
     color: '#fff',
     borderRadius: theme.shape.borderRadius * 0.4,
     paddingBlock: 8,
@@ -52,12 +59,37 @@ const StackStyle = styled(Stack)(({ theme }) => ({
         display: 'none',
     },
     [theme.breakpoints.up('sm')]: {
-        display: 'block',
+        display: 'flex',
     }
-}))
+}));
+
+const ListItemStyle = styled((props) => <ListItemButton {...props} />)(({ theme }) => ({
+    heigth: 48,
+    position: 'relative',
+    textTransform: 'capitalize',
+    color: theme.palette.success.main,
+    fontWeight: 600,
+    borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.success.main, 0.1)
+    }
+}));
+
+const ListItemPostJobStyle = styled((props) => <ListItemButton {...props} />)(({ theme }) => ({
+    heigth: 48,
+    position: 'relative',
+    textTransform: 'capitalize',
+    color: '#fff',
+    fontWeight: 600,
+    borderRadius: theme.shape.borderRadius * 0.4,
+    backgroundColor: theme.palette.success.main,
+    '&:hover': {
+        backgroundColor: theme.palette.success.dark
+    }
+}));
 
 
-const pages = ['Home', 'About Us', 'Jobs'];
+const pages = [{ name: 'Jobs', path: '/job-listing' }, { name: 'About Us', path: '/#' }];
 
 const HideOnScroll = (props) => {
     const { children, window } = props;
@@ -73,9 +105,17 @@ const HideOnScroll = (props) => {
 }
 
 const Header = (props) => {
-    const [user, setUser] = useState(null);
     const [openLogin, setOpenLogin] = useState(false);
     const [openSelectRegister, setOpenSelectRegister] = useState(false);
+    const [accessToken] = useLocalStorage('accessToken', null);
+    const { user, getCurrentUserStatus } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (getCurrentUserStatus === ACTION_STATUS.IDLE && accessToken) {
+            dispatch(getCurrentUser());
+        }
+    }, [accessToken, getCurrentUserStatus]);
 
     const handleCloseLogin = () => {
         setOpenLogin(false);
@@ -102,7 +142,17 @@ const Header = (props) => {
                             <Logo sx={{ width: '70px', height: '70px' }} display='inline-flex'/>
                         </Box>
                         <StackStyle direction='row' spacing={1}>
-                            {pages.map((page) => (<ButtonStyle color='success' key={page}>{page}</ButtonStyle>))}
+                            {pages.map((page) => (
+                                <ListItemStyle key={page.name} component={RouterLink} to={page.path} >
+                                    {page.name}
+                                </ListItemStyle>
+
+                            ))}
+                            {user?.role === ROLES.EMPLOYER && (
+                                <ListItemPostJobStyle component={RouterLink} to='/create-job' variant='contained' color='success'>
+                                    POST JOB
+                                </ListItemPostJobStyle>
+                            )}
                         </StackStyle>
                         {/* <Searchbar /> */}
                         <Box sx={{ flexGrow: 1 }} />
@@ -119,7 +169,7 @@ const Header = (props) => {
                             (
                                 <>
                                     <ButtonStyle color='success' onClick={handleClickOpenLogin}>Login</ButtonStyle>
-                                    <ButtonRegisterStyle color='success' variant='contained' onClick={handleClickOpenSelectRegister}>Register</ButtonRegisterStyle>
+                                    <ButtonContainedStyle color='success' variant='contained' onClick={handleClickOpenSelectRegister}>Register</ButtonContainedStyle>
                                 </>
                             )}
                         </Stack>

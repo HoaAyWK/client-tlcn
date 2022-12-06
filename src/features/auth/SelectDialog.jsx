@@ -19,7 +19,7 @@ const LeftAreaStyle = styled(Box)(({ theme }) => ({
         display: 'none',
     },
     [theme.breakpoints.up('md')]: {
-        display: 'block',
+        display: 'flex',
     },
 }));
 
@@ -59,7 +59,7 @@ const SelectDialog = (props) => {
         <>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth='sm'>
                 <Box>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={0}>
                         <Grid item xs={12} md={5}>
                             <LeftAreaStyle>
                                 <Stack spacing={2}>
@@ -122,8 +122,16 @@ const SelectDialog = (props) => {
                     </Grid> 
                 </Box>
             </Dialog>
-            <FreelancerRegiserForm open={openFreelancer} handleClose={handleCloseFreelancer} />
-            <EmployerRegisterForm open={openEmployer} handleClose={handleCloseEmployer} />
+            <FreelancerRegiserForm
+                open={openFreelancer}
+                handleClose={handleCloseFreelancer}
+                hanldeCloseSelect={handleClose}
+            />
+            <EmployerRegisterForm
+                open={openEmployer}
+                handleClose={handleCloseEmployer}
+                hanldeCloseSelect={handleClose}
+            />
         </>
     );
 };

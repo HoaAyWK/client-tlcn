@@ -6,11 +6,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 
 import { Logo, Iconify } from '../../components';
-
 import { FormProvider, RHFTextField } from '../../components/hook-form';
+import { login } from './authSlice';
+import { ACTION_STATUS } from '../../constants';
 
 const LeftAreaStyle = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -28,8 +31,11 @@ const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const LoginForm = (props) => {
-    const [showPassword, setShowPassword] = useState(false);
     const { open, handleClose } = props;
+    const [showPassword, setShowPassword] = useState(false);
+    const { loginStatus } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
 
     const LoginSchema = Yup.object().shape({
         email: Yup.string().required('Email is required')
@@ -48,11 +54,24 @@ const LoginForm = (props) => {
     });
 
     const {
-        handleSubmit
+        handleSubmit,
+        reset,
     } = methods;
 
     const onSubmit = async (data) => {
-        console.log(data);
+        try {
+            const actionResult = await dispatch(login(data));
+            const result = unwrapResult(actionResult);
+            
+            if (result.success) {
+                enqueueSnackbar('Login successfully', { variant: 'success' });
+                reset();
+                handleClose();
+            }
+
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
     };
 
     return (
@@ -101,17 +120,22 @@ const LoginForm = (props) => {
                                                     ),
                                                 }}
                                             /> 
-                                            <Link component={RouterLink} to='/forgot-password' style={{ textDecoration: 'none' }}>Forgot password?</Link>
                                         </Stack>
                                     </Grid>
+                                    <Grid item xs={12} sx={{ marginBlockStart: 1 }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                            <Link component={RouterLink} to='/forgot-password' style={{ textDecoration: 'none' }}>Forgot password?</Link>
+                                        </Box>
+                                    </Grid>
                                     <Grid item xs={12}>
-                                        <Grid container spacing={2}>
+                                        <Grid container spacing={2} sx={{ marginBlockStart: 1 }}>
                                             <Grid item xs={6}>
                                                 <LoadingButtonStyle
                                                     type='submit'
                                                     color='success'
                                                     variant='contained'
                                                     sx={{ width: '100%' }}
+                                                    loading={loginStatus === ACTION_STATUS.LOADING ? true : false}
                                                 >
                                                     Login
                                                 </LoadingButtonStyle>

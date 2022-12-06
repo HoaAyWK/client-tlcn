@@ -1,21 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Box, InputAdornment } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { styled } from '@mui/material/styles';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
 
 import { FormProvider, RHFTextField, RHFDateTextField, RHFMultiSelect } from '../../components/hook-form';
 import { fYMDate } from '../../utils/formatTime';
-
-const categories = [{ id: 1, name: "Web development" }, { id: 2, name: "Design UI/UX" }];
+import { getCategories, selectAllCategories } from '../categories/categorySlice';
+import { ACTION_STATUS } from '../../constants';
+import { createJob } from './jobSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
     color: '#fff'
 }));
 
 const JobForm = () => {
+    const categories = useSelector(selectAllCategories);
+    const { status: loadCategoriesStatus } = useSelector(state => state.categories);
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        if (loadCategoriesStatus === ACTION_STATUS.IDLE) {
+            dispatch(getCategories());
+        }
+    }, [loadCategoriesStatus, dispatch]);
+
     const JobSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
         description: Yup.string().required('Description is reuquired'),
@@ -38,15 +53,26 @@ const JobForm = () => {
 
     const methods = useForm({
         resolver: yupResolver(JobSchema),
-        defaultValues
+        defaultValues,
     });
 
     const {
-        handleSubmit
+        handleSubmit,
+        reset,
     } = methods;
 
     const onSubmit = async (data) => {
-        console.log(data);
+        try {
+            const actionResult = await dispatch(createJob(data));
+            const result = unwrapResult(actionResult);
+
+            if (result) {
+                enqueueSnackbar('Created successfully', { variant: 'success' });
+                reset();
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' })
+        }
     };
 
     return (
@@ -79,7 +105,13 @@ const JobForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                <RHFMultiSelect name="categories" data={categories} id="categories" label="Categories" />
+                <RHFMultiSelect
+                    name="categories"
+                    data={categories}
+                    id="categories"
+                    label="Categories"
+                    defaultValue={[]}
+                />
                 </Grid>
                 <Grid item xs={12}>
                     <Box
