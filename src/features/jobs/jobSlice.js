@@ -6,9 +6,18 @@ import { jobApi } from "../../services";
 const initialState = {
     createJobStatus: ACTION_STATUS.IDLE,
     latestJobStatus: ACTION_STATUS.IDLE,
+    jobDetailStatus: ACTION_STATUS.IDLE,
     latestJobCategories: [], 
     latestJobs: [],
+    jobD: null
 };
+
+export const jobDetail = createAsyncThunk(
+    'job/detail',
+    async (id) => {
+        return await jobApi.getJob(id)
+    }
+)
 
 export const createJob = createAsyncThunk(
     'jobs/create',
@@ -61,6 +70,18 @@ const jobSlice = createSlice({
             })
             .addCase(getLatestJobs.rejected, (state) => {
                 state.latestJobStatus = ACTION_STATUS.FAILED
+            })
+
+            // get detail job
+            .addCase(jobDetail.pending, (state) => {
+                state.jobDetailStatus = ACTION_STATUS.LOADING
+            })
+            .addCase(jobDetail.fulfilled, (state, action) => {
+                state.jobDetailStatus = ACTION_STATUS.SUCCESSED
+                state.job = action.payload.job
+            })
+            .addCase(jobDetail.rejected, (state) => {
+                state.jobDetailStatus = ACTION_STATUS.FAILED
             })
     }
 });

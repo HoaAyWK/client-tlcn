@@ -7,6 +7,8 @@ import categoryReducer from '../features/categories/categorySlice';
 import jobReducer from '../features/jobs/jobSlice';
 import freelancerReducer from '../features/freelancers/freelancerSlice';
 import searchReducer from '../features/search/searchSlice';
+import userReducer from '../features/userDetail/userSlice'
+import appliedReducer from '../features/applied/appliedSlice'
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +18,8 @@ export const store = configureStore({
         categories: categoryReducer,
         jobs: jobReducer,
         freelancers: freelancerReducer,
-        search: searchReducer
+        search: searchReducer,
+        user: userReducer,
+        applied: appliedReducer
     },
 });

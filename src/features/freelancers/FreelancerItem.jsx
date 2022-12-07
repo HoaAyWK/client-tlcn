@@ -9,7 +9,7 @@ import {
     Avatar,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import { Iconify, Label } from '../../components';
 
 const Wrapper = styled(Box)(({ theme }) => ({
@@ -55,18 +55,25 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
 }));
 
 const FreelancerItem = ({ freelancer, skills }) => {
+    const navigate = useNavigate()
+    const goFreelancerDetailPage = (id) => {
+        navigate({
+            pathname:'freelancer',
+            search: `id=${id}`
+        })
+    }
     return (
         <Wrapper>
             <BoxStyle>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <RouterLink to={`/freelancer/${freelancer?.user?.id}`}>
+                    <RouterLink to={`/freelancer?id=${freelancer?.id}`}>
                         <AvatarStyle src={freelancer?.user?.image} alt={freelancer?.firstName} />
                     </RouterLink>
                     <Stack spacing={0.5} sx={{ marginInlineStart: 2 }}>
                         <Stack direction='row' spacing={1}>
                             <Typography
                                 component={RouterLink}
-                                to={`/freelancer/${freelancer?.user?.id}`}
+                                to={`/freelancer?id${freelancer?.id}`}
                                 variant='body1'
                                 color='text.primary'
                                 sx={{ fontWeight: 600, textDecoration: 'none' }}
@@ -108,7 +115,7 @@ const FreelancerItem = ({ freelancer, skills }) => {
                 </Stack>
                 <Stack direction='row' spacing={1}>
                     <ButtonStyle color='success' variant='contained'>Contact</ButtonStyle>
-                    <ButtonStyle color='primary' variant='contained'>Details</ButtonStyle>
+                    <ButtonStyle onClick={() => {goFreelancerDetailPage(freelancer?.id)}} color='primary' variant='contained'>Details</ButtonStyle>
                 </Stack>
             </BoxStyle>
         </Wrapper>
