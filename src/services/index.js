@@ -6,3 +6,4 @@ export { default as userApi } from './userApi';
 export { default as employerApi } from './employerApi';
 export { default as categoryApi } from './categoryApi';
 export { default as searchApi } from './searchApi';
+export { default as checkoutApi } from './checkoutApi';

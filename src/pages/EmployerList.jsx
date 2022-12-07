@@ -12,31 +12,28 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { alpha, styled } from '@mui/material/styles';
 
-import { searchJobs } from '../features/search/searchSlice';
-import ItemResult from '../features/JobListing/ItemResult';
+import { searchEmployers } from '../features/search/searchSlice';
 import InputField from '../features/JobListing/InputField';
-import CheckboxCategories from '../features/JobListing/CheckboxCategories';
-import { ACTION_STATUS } from '../constants';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Page } from '../components';
-
+import EmployerItem from '../features/employers/EmployerItem';
 
 const ContainerStyle = styled(Container)(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.1)
 }));
 
-function JobListing() {
+const EmployerList = () => {
     const [searchParams] = useSearchParams();
-    const { jobs, totalJobItem, totalJobPage } = useSelector(state => state.search);
+    const { employers, totalEmployerItem, totalEmployerPage } = useSelector(state => state.search);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const keyword = searchParams.get('keyword');
     const page = searchParams.get('page');
-    
+
     useEffect(() => {
-        async function fetchJobs() {
+        async function fetchFreelanacers() {
             try {
-                const actionResult = await dispatch(searchJobs({ keyword: keyword || '', page: page || 1 }));
+                const actionResult = await dispatch(searchEmployers({ keyword: keyword || '', page: page || 1 }));
                 const result = unwrapResult(actionResult);
                 console.log(result);
             } catch (error) {
@@ -44,7 +41,7 @@ function JobListing() {
             }
         }
 
-        fetchJobs();
+        fetchFreelanacers();
 
     }, [keyword, page, dispatch]);
 
@@ -59,12 +56,12 @@ function JobListing() {
     } = methods;
     
     const onSubmit = (data) => {
-        navigate(`/jobs?keyword=${data.jobSearch}`)
-            dispatch(searchJobs({ keyword: data.jobSearch, page: 1 }));
+        navigate(`/employers?keyword=${data.jobSearch}`)
+            dispatch(searchEmployers({ keyword: data.jobSearch, page: 1 }));
     };
 
     const handlePageChange = (e, page) => {
-        navigate(`/jobs?keyword=${keyword}&page=${page}`)
+        navigate(`/employers?keyword=${keyword}&page=${page}`)
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -72,7 +69,7 @@ function JobListing() {
     };
 
     return (
-        <Page title='Search Job'>
+        <Page title='Search Employer'>
             <ContainerStyle maxWidth='lg'>
                 <Grid container spacing={2} sx={{ marginBlockStart: 5 }}>
                     <Grid item xs={12} sm={9}>
@@ -100,16 +97,18 @@ function JobListing() {
                         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                             <Box>
                                 <Typography margin={'45px 0'} variant='h5' fontWeight={600}>
-                                    {totalJobItem > 1 ? `Found ${totalJobItem} jobs for you` : `Found ${totalJobItem} job for you`}
+                                    {totalEmployerItem > 1 ? `Found ${totalEmployerItem} jobs for you` : `Found ${totalEmployerItem} job for you`}
                                 </Typography>
-                                {jobs?.map(item => <ItemResult 
-                                    item={item}
-                                />)}
+                                <Stack spacing={2}>
+                                    {employers?.map(item => (
+                                        <EmployerItem employer={item} />
+                                    ))}
+                                </Stack>
                             </Box>
-                            {totalJobItem > 5 && (
+                            {totalEmployerItem > 5 && (
                                 <Box style={{display: 'flex', justifyContent: 'end'}}>
                                     <Pagination
-                                        count={totalJobPage}
+                                        count={totalEmployerPage}
                                         variant="outlined"
                                         color='success'
                                         onChange={handlePageChange}
@@ -127,4 +126,4 @@ function JobListing() {
     );
 }
 
-export default JobListing;
+export default EmployerList

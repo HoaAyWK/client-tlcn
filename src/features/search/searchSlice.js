@@ -4,10 +4,17 @@ import { searchApi } from "../../services";
 
 const initialState = {
     jobs: [],
-    totalPage: 0,
-    totalItem: 0,
-    status: ACTION_STATUS.IDLE,
-    error: null
+    totalJobPage: 0,
+    totalJobItem: 0,
+    searchJobstatus: ACTION_STATUS.IDLE,
+    freelancers: [],
+    totalFreelancerPage: 0,
+    totalFreelancerItem: 0,
+    searchFreelancerStatus: ACTION_STATUS.IDLE,
+    employers: [],
+    searchEmployerStatus: ACTION_STATUS.IDLE,
+    totalEmployerPage: 0,
+    totalEmployerItem: 0,
 };
 
 export const searchJobs = createAsyncThunk(
@@ -15,6 +22,21 @@ export const searchJobs = createAsyncThunk(
     async ({ keyword, page }) => {
         const res =  await searchApi.searchJobs(keyword, page);
         return res;
+    }
+);
+
+export const searchFreelancers = createAsyncThunk(
+    'search/freelancers',
+    async ({ keyword, page }) => {
+        return await searchApi.searchFreelancers(keyword, page);
+    }
+);
+
+
+export const searchEmployers = createAsyncThunk(
+    'search/employers',
+    async ({ keyword, page }) => {
+        return await searchApi.searchEmployers(keyword, page);
     }
 );
 
@@ -29,18 +51,52 @@ const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder
 
+
+            // Seach JObs
+
             .addCase(searchJobs.pending, (state) => {
                 state.status = ACTION_STATUS.LOADING;
             })
             .addCase(searchJobs.fulfilled, (state, action) => {
                 state.jobs = action.payload.data;
-                state.totalPage = action.payload.totalPage;
-                state.totalItem = action.payload.totalItem;
-                state.status = ACTION_STATUS.SUCCESSED;
+                state.totalJobPage = action.payload.totalPage;
+                state.totalJobItem = action.payload.totalItem;
+                state.searchJobstatus = ACTION_STATUS.SUCCESSED;
             })
-            .addCase(searchJobs.rejected, (state, action) => {
+            .addCase(searchJobs.rejected, (state) => {
                 state.status = ACTION_STATUS.FAILED;
-                state.error = action.error;
+            })
+
+
+            // Search Freelancers
+
+            .addCase(searchFreelancers.pending, (state) => {
+                state.searchFreelancerStatus = ACTION_STATUS.LOADING
+            })
+            .addCase(searchFreelancers.fulfilled, (state, action) => {
+                state.searchFreelancerStatus = ACTION_STATUS.SUCCESSED;
+                state.freelancers = action.payload.data;
+                state.totalFreelancerItem = action.payload.totalItem;
+                state.totalFreelancerPage = action.payload.totalPage;
+            })
+            .addCase(searchFreelancers.rejected, (state) => {
+                state.searchFreelancerStatus = ACTION_STATUS.FAILED;
+            })
+
+
+            // Search Employers
+
+            .addCase(searchEmployers.pending, (state) => {
+                state.searchEmployerStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(searchEmployers.fulfilled, (state, action) => {
+                state.searchEmployerStatus = ACTION_STATUS.SUCCESSED;
+                state.employers = action.payload.data;
+                state.totalEmployerItem = action.payload.totalItem;
+                state.totalEmployerPage = action.payload.totalEmployerPage;
+            })
+            .addCase(searchEmployers.rejected, (state) => {
+                state.searchEmployerStatus = ACTION_STATUS.FAILED;
             })
     }
 });

@@ -5,3 +5,6 @@ export { default as JobListing } from "./JobListing";
 export { default as JobDetail } from "./JobDetail";
 export { default as NotFound } from './Page404';
 export { default as Loading } from './Loading';
+export { default as FreelancerList } from './FreelanerList';
+export { default as EmployerList } from './EmployerList';
+export { default as Pricing } from './Pricing';

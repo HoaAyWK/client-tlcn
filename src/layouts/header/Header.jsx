@@ -89,7 +89,16 @@ const ListItemPostJobStyle = styled((props) => <ListItemButton {...props} />)(({
 }));
 
 
-const pages = [{ name: 'Jobs', path: '/jobs' }, { name: 'About Us', path: '/#' }];
+const pages = [
+    { name: 'Jobs', path: '/jobs' },
+    { name: 'Employers', path: '/employers' },
+];
+const employerPages = [
+    { name: 'Jobs', path: '/jobs' },
+    { name: 'Employers', path: '/employers' },
+    { name: 'Pricing', path: '/pricing' },
+    { name: 'Freelancers', path: '/freelancers' },
+];
 
 const HideOnScroll = (props) => {
     const { children, window } = props;
@@ -142,12 +151,21 @@ const Header = (props) => {
                             <Logo sx={{ width: '70px', height: '70px' }} display='inline-flex'/>
                         </Box>
                         <StackStyle direction='row' spacing={1}>
-                            {pages.map((page) => (
-                                <ListItemStyle key={page.name} component={RouterLink} to={page.path} >
-                                    {page.name}
-                                </ListItemStyle>
+                            {user?.role === ROLES.EMPLOYER ? (
+                                employerPages.map((page) => (
+                                    <ListItemStyle key={page.name} component={RouterLink} to={page.path} >
+                                        {page.name}
+                                    </ListItemStyle>
 
-                            ))}
+                                ))
+                            ) : (
+                                pages.map((page) => (
+                                    <ListItemStyle key={page.name} component={RouterLink} to={page.path} >
+                                        {page.name}
+                                    </ListItemStyle>
+
+                                ))
+                            )}
                             {user?.role === ROLES.EMPLOYER && (
                                 <ListItemPostJobStyle component={RouterLink} to='/create-job' variant='contained' color='success'>
                                     POST JOB

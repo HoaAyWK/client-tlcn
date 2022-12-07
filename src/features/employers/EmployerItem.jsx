@@ -54,45 +54,45 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
     }
 }));
 
-const FreelancerItem = ({ freelancer, skills }) => {
-    const id = freelancer?.id || freelancer?._id;
+const EmployerItem = ({ employer, skills }) => {
+    const id = employer?.id || employer?._id;
     return (
         <Wrapper>
             <BoxStyle>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <RouterLink to={`/freelancer/${id}`}>
-                        <AvatarStyle src={freelancer?.user?.image} alt={freelancer?.firstName} />
+                    <RouterLink to={`/employer/${id}`}>
+                        <AvatarStyle src={employer?.user?.image} alt={employer?.companyName} />
                     </RouterLink>
                     <Stack spacing={0.5} sx={{ marginInlineStart: 2 }}>
                         <Stack direction='row' spacing={1}>
                             <Typography
                                 component={RouterLink}
-                                to={`/freelancer/${id}`}
+                                to={`/employer/${id}`}
                                 variant='body1'
                                 color='text.primary'
                                 sx={{ fontWeight: 600, textDecoration: 'none' }}
                             >
-                                {`${freelancer?.firstName} ${freelancer?.lastName}`}
+                                {employer?.companyName}
                             </Typography>
                             <Label
                                 variant='ghost'
                                 color={
-                                    freelancer?.user?.stars >= 0
-                                    && freelancer?.user?.stars < 2 && 'error' ||
-                                    freelancer?.user?.stars >= 2 && freelancer?.user?.stars < 3.5 && 'warning' ||
+                                    employer?.user?.stars >= 0
+                                    && employer?.user?.stars < 2 && 'error' ||
+                                    employer?.user?.stars >= 2 && employer?.user?.stars < 3.5 && 'warning' ||
                                     'success' 
                                 }
                             >
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Iconify icon='ic:twotone-star-outline' width={16} height={16} />
                                     <Typography variant='body2' sx={{ marginInlineStart: 0.5 }}>
-                                        {freelancer?.user?.stars}
+                                        {employer?.user?.stars}
                                     </Typography>
                                 </Box>
                             </Label>
                         </Stack>
                         <Typography variant='body2' color='text.secondary'>
-                            {freelancer?.user?.email}
+                            {employer?.user?.email}
                         </Typography>
                     </Stack>
                 </Box>
@@ -108,7 +108,6 @@ const FreelancerItem = ({ freelancer, skills }) => {
                     </Box>
                 </Stack>
                 <Stack direction='row' spacing={1}>
-                    <ButtonStyle color='success' variant='contained'>Contact</ButtonStyle>
                     <ButtonStyle color='primary' variant='contained'>Details</ButtonStyle>
                 </Stack>
             </BoxStyle>
@@ -116,4 +115,4 @@ const FreelancerItem = ({ freelancer, skills }) => {
     );
 }
 
-export default FreelancerItem;
+export default EmployerItem;
