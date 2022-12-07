@@ -4,10 +4,9 @@ import {
     Grid, 
     Typography,
     Pagination,
-    Stack,
     Container,
 } from '@mui/material';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { alpha, styled } from '@mui/material/styles';
@@ -15,9 +14,6 @@ import { alpha, styled } from '@mui/material/styles';
 import { searchJobs } from '../features/search/searchSlice';
 import ItemResult from '../features/JobListing/ItemResult';
 import InputField from '../features/JobListing/InputField';
-import CheckboxCategories from '../features/JobListing/CheckboxCategories';
-import { ACTION_STATUS } from '../constants';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { Page } from '../components';
 
 
@@ -34,18 +30,7 @@ function JobListing() {
     const page = searchParams.get('page');
     
     useEffect(() => {
-        async function fetchJobs() {
-            try {
-                const actionResult = await dispatch(searchJobs({ keyword: keyword || '', page: page || 1 }));
-                const result = unwrapResult(actionResult);
-                console.log(result);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        fetchJobs();
-
+        dispatch(searchJobs({ keyword: keyword || '', page: page || 1 }));
     }, [keyword, page, dispatch]);
 
     const methods = useForm({

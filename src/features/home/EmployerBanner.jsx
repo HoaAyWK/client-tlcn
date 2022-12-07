@@ -8,6 +8,7 @@ const EmployerBanner = () => {
             image='/static/images/search_freelancer.png'
             title='Search Freelancers'
             subtitle='Find the best freelancers for any job online.'
+            page='freelancers'
         />
     )
 };

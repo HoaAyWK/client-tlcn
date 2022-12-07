@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Stack, Container, Typography, Box, Grid, Button } from '@mui/material';
+import { Container, Typography, Box, Grid } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Page, Search } from '../components';
+import { Page } from '../components';
 import CategoryItem from '../features/categories/CategoryItem';
 import { getCategories, selectAllCategories } from '../features/categories/categorySlice';
 import { ACTION_STATUS, ROLES } from '../constants';

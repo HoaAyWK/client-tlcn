@@ -7,16 +7,14 @@ import {
     Stack,
     Container,
 } from '@mui/material';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { alpha, styled } from '@mui/material/styles';
 
 import { searchFreelancers } from '../features/search/searchSlice';
-import ItemResult from '../features/JobListing/ItemResult';
 import InputField from '../features/JobListing/InputField';
 import CheckboxCategories from '../features/JobListing/CheckboxCategories';
-import { ACTION_STATUS } from '../constants';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Page } from '../components';
 import FreelancerItem from '../features/freelancers/FreelancerItem';

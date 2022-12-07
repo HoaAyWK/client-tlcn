@@ -1,10 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import LogoCompany from './../features/JobListing/components/LogoCompany';
-import DescriptionItem from './../features/JobListing/components/DescriptionItem';
-import DescriptionItemRight from './../features/JobListing/components/DescriptionItemRight';
-import MainContent from '../features/JobListing/MainContent';
-import CardCustom from '../features/JobListing/components/CardCustom';
 import { fDate } from '../utils/formatTime'
 import { Link as RouterLink } from 'react-router-dom'
 import { styled } from '@mui/material/styles';
@@ -21,7 +16,6 @@ import {
     Typography,
     Stack,
     Divider,
-    Card,
     Button
 } from '@mui/material';
 import { Page, Label } from '../components'

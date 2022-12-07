@@ -1,8 +1,7 @@
 import React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { Box, Container, Avatar, Button, Typography, Stack  } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Box, Avatar, Button, Typography, Stack  } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { Iconify } from '../../components';
@@ -82,7 +81,6 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
 const PricingItem = ({ item }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-    const navigate = useNavigate();
 
     const handleclickPurchase = async (e) => {
         const pricingId = e.target.value;
@@ -92,8 +90,8 @@ const PricingItem = ({ item }) => {
             const result = unwrapResult(actionResult);
 
             if (result) {
-                navigate(result.url);
                 dispatch(refresh());
+                window.location.href = result.url;
             }
 
         } catch (error) {

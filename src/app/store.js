@@ -22,8 +22,8 @@ export const store = configureStore({
         freelancers: freelancerReducer,
         search: searchReducer,
         pricings: pricingReducer,
-        checkout: checkoutReducer
+        checkout: checkoutReducer,
         user: userReducer,
-        applied: appliedReducer
+        applied: appliedReducer,
     },
 });

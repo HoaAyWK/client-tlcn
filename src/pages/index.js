@@ -8,3 +8,4 @@ export { default as Loading } from './Loading';
 export { default as FreelancerList } from './FreelanerList';
 export { default as EmployerList } from './EmployerList';
 export { default as Pricing } from './Pricing';
+export { default as SuccessPayment } from './SuccessPayment';
