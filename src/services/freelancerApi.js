@@ -10,6 +10,10 @@ class FreelancerApi {
         const url = '/freelancer';
         return axiosClient.get(url);
     }
+    getInfoFreelancer = (id) => {
+        const url = `/freelancer/info?id=${id}`
+        return axiosClient.get(url)
+    }
 }
 
 export default new FreelancerApi();

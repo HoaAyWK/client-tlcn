@@ -9,6 +9,8 @@ import freelancerReducer from '../features/freelancers/freelancerSlice';
 import searchReducer from '../features/search/searchSlice';
 import pricingReducer from '../features/pricing/pricingSlice';
 import checkoutReducer from '../features/checkout/checkoutSlice';
+import userReducer from '../features/userDetail/userSlice'
+import appliedReducer from '../features/applied/appliedSlice'
 
 export const store = configureStore({
     reducer: {
@@ -21,5 +23,7 @@ export const store = configureStore({
         search: searchReducer,
         pricings: pricingReducer,
         checkout: checkoutReducer
+        user: userReducer,
+        applied: appliedReducer
     },
 });

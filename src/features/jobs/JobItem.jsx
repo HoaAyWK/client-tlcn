@@ -69,7 +69,7 @@ const JobItem = ({ job, categories }) => {
     return (
         <Wrapper>
             <BoxStyle>
-                <RouterLink to='/#'>
+                <RouterLink to={`/job?id=${job?.id}`}>
                     <CardStyle>
                         <CardMediaStyle
                             component='img'

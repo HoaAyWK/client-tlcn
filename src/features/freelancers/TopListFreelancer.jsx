@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ACTION_STATUS } from '../../constants';
 import { getFreelancers, selectFreelancersByNum } from './freelancerSlice';
 import FreelancerItem from './FreelancerItem';
-
+import { useNavigate } from 'react-router-dom';
 const ButtonStyle = styled(Button)(({ theme }) => ({
     color: '#fff'
 }));
@@ -19,7 +19,7 @@ const TopListFreelancer = () => {
     const { status, freelancerSkkills } = useSelector(state => state.freelancers);
     const dispatch = useDispatch();
     const freelancers = useSelector((state) => selectFreelancersByNum(state, 5));
-
+    const navigate = useNavigate()
     useEffect(() => {
         if (status === ACTION_STATUS.IDLE) {
             dispatch(getFreelancers());
