@@ -6,6 +6,15 @@ class AppliedApi {
         return axiosClient.get(url)
     }
     
+    createApply = (data) => {
+        const url = '/applied/add';
+        return axiosClient.post(url, data);
+    };
+
+    getMyApplies = (page) => {
+        const url = `/applied/my?page=${page}&limit=5`;
+        return axiosClient.get(url);
+    }
 };
 
 export default new AppliedApi();

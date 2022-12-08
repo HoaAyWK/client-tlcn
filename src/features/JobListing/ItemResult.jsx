@@ -7,23 +7,71 @@ import {
     Grid,
     Typography,
     Stack,
-    Button
+    Button,
+    Avatar
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 
 import LogoCompany from './components/LogoCompany';
 import { Iconify, Label } from '../../components';
 import { fDate } from '../../utils/formatTime';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import { addApply } from '../applied/appliedSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+import socket from '../../services/socket';
+
+
+const AvatarSyle = styled(Avatar)(({ theme }) => ({
+    width: 90,
+    height: 90,
+    borderRadius: '20%'
+}));
+
 
 function ItemResult({ item }) {
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+    const { user, freelancer } = useSelector(state => state.auth);
+
+
+    const handleApply = async (e) => {
+        if (!freelancer || !user) {
+            enqueueSnackbar('Please login!', { variant: 'error' });
+        }
+
+        try {
+            const data = { freelancer: freelancer.id, job: e.target.value };
+            const actionResult = await dispatch(addApply(data));
+            const result = unwrapResult(actionResult);
+            console.log(result);
+
+            if (result) {
+                const freelancerId = user?.id;
+                const username = freelancer?.firstName + " " + freelancer?.lastName;
+                const jobId = item?._id;
+                const jobName = item?.name;
+                const avatar = user?.image;
+                socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: item?.employer?.user?._id });
+                enqueueSnackbar('Apply successfully', { variant: 'success' });
+            }
+
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    };
+
     return (
-        <Card key={item?._id} sx={{ 
-            maxWidth: '100%', 
-            border: '1px solid #f3f3f3', 
-            margin: '45px 0', 
-            '&:hover': {
-                border: '1px solid #02af74'
-            }}}
+        <Card 
+            sx={{ 
+                maxWidth: '100%', 
+                border: '1px solid #f3f3f3', 
+                margin: '45px 0', 
+                '&:hover': {
+                    border: '1px solid #02af74'
+                }
+            }}
         >
             <CardActionArea sx={{
                 minHeight: '130px', 
@@ -31,7 +79,7 @@ function ItemResult({ item }) {
                 display: 'flex'
             }}>
                 <RouterLink to={`/employers/${item?._id}`}>
-                    <LogoCompany/>
+                    <AvatarSyle src={item?.employer?.user?.image} />
                 </RouterLink>
                 <Grid container flex={1} alignItems="center" spacing={1}>
                     <Grid item xs={10.5}> 
@@ -61,7 +109,7 @@ function ItemResult({ item }) {
                             {item?.categories && (
                                 <Stack direction='row' spacing={1} sx={{ marginInlineStart: 2 }}>
                                     {item?.categories?.map((cate) => (
-                                        <Label key={cate?._id} variant='contained' color='primary'>
+                                        <Label key={cate?._id} variant='ghost'>
                                             {cate?.category?.name}
                                         </Label>
                                     ))}
@@ -126,7 +174,12 @@ function ItemResult({ item }) {
                         {fDate(item?.expireDate)}
                     </Typography>
                 </Stack>
-                <Button size="small" color="primary">
+                <Button
+                    size="small"
+                    color="primary"
+                    onClick={handleApply}
+                    value={item?._id}
+                >
                     {'Apply Now >>>'}
                 </Button>
             </CardActions>

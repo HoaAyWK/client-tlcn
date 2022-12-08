@@ -66,8 +66,8 @@ const CardStyle = styled(Card)(({ theme }) => ({
 
 const FreelancerProfile = () => {
     const [value, setValue] = useState('1');
-    const [openUpdateFreelancer, setOpenUpdateFeelancer] = useState(false);
-    const [openUpdateGeneral, setOpneUpdateGeneral] = useState(false);
+    const [openUpdateFreelancer, setOpenUpdateFeelancer] = useState(true);
+    const [openUpdateGeneral, setOpneUpdateGeneral] = useState(true);
     const { user, freelancer, userSkills } = useSelector(state => state.auth);
 
     const handleChangeValue = (e, newValue) => {

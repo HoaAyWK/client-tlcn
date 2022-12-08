@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     AppBar,
     Button,
@@ -10,18 +10,16 @@ import {
     ListItemButton,
 } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useChatContext } from 'stream-chat-react';
 
 import { Logo } from '../../components';
 import AccountPopover from './AvatarPopover';
 import NotificationPopover from './NotificationPopover';
 import Message from './Message';
 import { LoginForm, SelectDialog } from '../../features/auth';
-import { useLocalStorage } from '../../hooks';
-import { ACTION_STATUS, ROLES } from '../../constants';
-import { getCurrentUser } from '../../features/auth/authSlice';
+import { ROLES } from '../../constants';
+import { useSelector } from 'react-redux';
 
 const APPBAR_MOBILE = 40;
 const APPBAR_DESKTOP = 62;
@@ -114,17 +112,17 @@ const HideOnScroll = (props) => {
 }
 
 const Header = (props) => {
+    const { user, unreadStreamMessages, notifications, handleRead, unreadMessages  } = props;
     const [openLogin, setOpenLogin] = useState(false);
     const [openSelectRegister, setOpenSelectRegister] = useState(false);
-    const [accessToken] = useLocalStorage('accessToken', null);
-    const { user, getCurrentUserStatus } = useSelector(state => state.auth);
-    const dispatch = useDispatch();
+    const { freelancer } = useSelector(state => state.auth);
+    const { pathname } = useLocation();
+    const { client } = useChatContext();
+    const path = pathname.split('/');
 
-    useEffect(() => {
-        if (getCurrentUserStatus === ACTION_STATUS.IDLE && accessToken) {
-            dispatch(getCurrentUser());
-        }
-    }, [accessToken, getCurrentUserStatus]);
+    const reverseNotifications = useMemo(() => {
+        return notifications ? notifications.slice(0).reverse() : [];
+    }, [notifications])
 
     const handleCloseLogin = () => {
         setOpenLogin(false);
@@ -141,6 +139,10 @@ const Header = (props) => {
     const handleCloseSelectRegister = () => {
         setOpenSelectRegister(false);
     };
+
+    if (path.includes('messaging')) {
+        return <></>
+    }
 
     return (
         <>
@@ -178,8 +180,16 @@ const Header = (props) => {
                         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
                             {user ? (
                                 <>
-                                    <Message />
-                                    <NotificationPopover />
+                                    {client && (
+                                        <Message news={unreadStreamMessages} />
+                                    )}
+                                    {!freelancer && (
+                                        <NotificationPopover
+                                            notifications={reverseNotifications}
+                                            handleRead={handleRead}
+                                            unreadMessages={unreadMessages}    
+                                        />
+                                    )}
                                     <AccountPopover user={user} />
                                 </>
                             )

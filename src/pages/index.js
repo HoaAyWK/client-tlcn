@@ -9,3 +9,6 @@ export { default as FreelancerList } from './FreelanerList';
 export { default as EmployerList } from './EmployerList';
 export { default as Pricing } from './Pricing';
 export { default as SuccessPayment } from './SuccessPayment';
+export { default as Messaging } from './Messaging';
+export { default as JobManagement } from './JobManagement';
+export { default as ApplyManagement } from './ApplyManagement';

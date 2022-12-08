@@ -102,7 +102,7 @@ const FreelanerList = () => {
                                 </Typography>
                                 <Stack spacing={2}>
                                     {freelancers?.map(item => (
-                                        <FreelancerItem freelancer={item} />
+                                        <FreelancerItem key={item?._id} freelancer={item} />
                                     ))}
                                 </Stack>
                             </Box>

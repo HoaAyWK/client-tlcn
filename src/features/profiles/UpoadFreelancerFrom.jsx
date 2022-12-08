@@ -8,6 +8,7 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useChatContext } from 'stream-chat-react';
 
 import { RHFTextField, RHFRadioGroup, FormProvider } from '../../components/hook-form';
 
@@ -27,7 +28,8 @@ const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const UpoadFreelancerFrom = () => {
-    const { freelancer } = useSelector(state => state.auth);
+    const { freelancer, user } = useSelector(state => state.auth);
+    const { client } = useChatContext();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { updateFeelancerStatus } = useSelector(state => state.profile);
@@ -70,6 +72,14 @@ const UpoadFreelancerFrom = () => {
             const result = unwrapResult(actionResult);
 
             if (result) {
+                if (client) {
+                    await client.upsertUser({
+                        id: client.userID,
+                        name: freelancer?.firstName + ' ' +  freelancer?.lastName,
+                        image: user?.image,
+                        email: user?.email
+                    });
+                }
                 enqueueSnackbar("Updated successfully", { variant: 'success' });
             }
         } catch (error) {

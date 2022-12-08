@@ -35,7 +35,7 @@ function JobListing() {
 
     const methods = useForm({
         defaultValues: {
-            jobSearch: keyword,
+            jobSearch: keyword || '',
         }
     })
     
@@ -49,7 +49,8 @@ function JobListing() {
     };
 
     const handlePageChange = (e, page) => {
-        navigate(`/jobs?keyword=${keyword}&page=${page}`)
+        const kw = keyword || '';
+        navigate(`/jobs?keyword=${kw}&page=${page}`)
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -87,9 +88,12 @@ function JobListing() {
                                 <Typography margin={'45px 0'} variant='h5' fontWeight={600}>
                                     {totalJobItem > 1 ? `Found ${totalJobItem} jobs for you` : `Found ${totalJobItem} job for you`}
                                 </Typography>
-                                {jobs?.map(item => <ItemResult 
-                                    item={item}
-                                />)}
+                                {jobs?.map(item => (
+                                    <ItemResult
+                                        item={item}
+                                        key={item?._id}
+                                    />)
+                                )}
                             </Box>
                             {totalJobItem > 5 && (
                                 <Box style={{display: 'flex', justifyContent: 'end'}}>

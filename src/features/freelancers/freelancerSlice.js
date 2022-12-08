@@ -7,6 +7,8 @@ const freelancersAdaper = createEntityAdapter();
 
 const initialState = freelancersAdaper.getInitialState({
     status: ACTION_STATUS.IDLE,
+    turnOnStatus: ACTION_STATUS.IDLE,
+    turnOffStatus: ACTION_STATUS.IDLE,
     freelancerSkills: []
 });
 
@@ -15,6 +17,20 @@ export const getFreelancers = createAsyncThunk(
     async () => {
         return await freelancerApi.getFreelancers();
     } 
+);
+
+export const turnOn = createAsyncThunk(
+    'freelancers/turnOn',
+    async () => {
+        return await freelancerApi.turnOnFindJob();
+    }
+);
+
+export const turnOff = createAsyncThunk(
+    'freelancers/turnOff',
+    async () => {
+        return await freelancerApi.turnOffFindJob();
+    }
 );
 
 
@@ -26,6 +42,7 @@ const freelancerslice = createSlice({
     extraReducers: (builder) => {
         builder
 
+        // Get Freelancers
 
         .addCase(getFreelancers.pending, (state) => {
             state.status = ACTION_STATUS.LOADING;
@@ -37,6 +54,31 @@ const freelancerslice = createSlice({
         })
         .addCase(getFreelancers.rejected, (state) => {
             state.status = ACTION_STATUS.FAILED;
+        })
+
+
+        // Turn on find job
+
+        .addCase(turnOn.pending, (state) => {
+            state.turnOnStatus = ACTION_STATUS.LOADING;
+        })
+        .addCase(turnOn.fulfilled, (state) => {
+            state.turnOnStatus = ACTION_STATUS.SUCCEEDED;
+        })
+        .addCase(turnOn.rejected, (state) => {
+            state.turnOnStatus = ACTION_STATUS.FAILED;
+        })
+
+        // Turn off find job
+
+        .addCase(turnOff.pending, (state) => {
+            state.turnOffStatus = ACTION_STATUS.LOADING;
+        })
+        .addCase(turnOff.fulfilled, (state) => {
+            state.turnOffStatus = ACTION_STATUS.SUCCEEDED;
+        })
+        .addCase(turnOff.rejected, (state) => {
+            state.turnOffStatus = ACTION_STATUS.FAILED;
         })
     }
 })

@@ -5,8 +5,12 @@ import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { MenuPopover, LetterAvatar } from '../../components';
-import { logout } from '../../features/auth/authSlice';
+import { getCurrentUser, logout } from '../../features/auth/authSlice';
 import { ROLES } from '../../constants';
+import TurnOnDialog from './TurnOnDialog';
+import { useSnackbar } from 'notistack';
+import { turnOff, turnOn } from '../../features/freelancers/freelancerSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const FREELANCER_MENU_OPTIONS = [
     {
@@ -39,9 +43,12 @@ const AccountPopover = ({ user }) => {
     const [open, setOpen] = useState(null);
     const [menu, setMenu] = useState([]);
     const [name, setName] = useState('');
+    const [openTurnOn, setOpenTurnOn] = useState(false);
+    const [openTurnOff, setOpenTurnOff] = useState(false);
     const { employer, freelancer } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (user?.role === ROLES.FREELANCER) {
@@ -79,6 +86,54 @@ const AccountPopover = ({ user }) => {
         navigate('/');
     };
 
+    const handleTurnOnFindJob = () => {
+        setOpenTurnOn(true);
+    };
+
+    const handleTurnOffFindJob = () => {
+        setOpenTurnOff(true);
+    };
+
+    const handleConfirmTurnOn = async () => {
+        try {
+            const actionResult = await dispatch(turnOn());
+            const result = unwrapResult(actionResult);
+
+            if (result) {
+                enqueueSnackbar('Turned on find job', { variant: 'success' });
+                dispatch(getCurrentUser());
+                handleCloseTurnOn();
+                handleClose();
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }  
+    };
+
+    const handleConfirmTurnOff = async () => {
+        try {
+            const actionResult = await dispatch(turnOff());
+            const result = unwrapResult(actionResult);
+
+            if (result) {
+                enqueueSnackbar('Turned off find job', { variant: 'success' });
+                dispatch(getCurrentUser());
+                handleCloseTurnOff();
+                handleClose();
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    };
+
+    const handleCloseTurnOn = async () => {
+        setOpenTurnOn(false);
+    };
+
+    const handleCloseTurnOff = () => {
+        setOpenTurnOff(false);
+    };
+ 
     return (
         <>
             <IconButton
@@ -132,6 +187,25 @@ const AccountPopover = ({ user }) => {
                 <Divider sx={{ borderStyle: 'dashed' }} />
 
                 <Stack sx={{ p: 1 }}>
+                {freelancer && (
+                    freelancer?.status ? (
+                        <MenuItem onClick={handleTurnOffFindJob}>
+                            Turn off find job
+                        </MenuItem>
+                    ) : (
+                        <MenuItem onClick={handleTurnOnFindJob}>
+                            Turn on find job
+                        </MenuItem>
+                    )
+                )}
+                {freelancer && (
+                    <MenuItem onClick={() => {
+                        navigate('/my-applies');
+                        handleClose();
+                    }}>
+                        My applies
+                    </MenuItem>
+                )}
                 {menu.map((option) => (
                     <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
                         {option.label}
@@ -145,6 +219,20 @@ const AccountPopover = ({ user }) => {
                     Logout
                 </MenuItem>
             </MenuPopover>
+            <TurnOnDialog
+                open={openTurnOn}
+                handleConfirm={handleConfirmTurnOn}
+                handleClose={handleCloseTurnOn}
+                title='Cofirm Turn On'
+                iconColor='#00B074'
+            />
+            <TurnOnDialog
+                open={openTurnOff}
+                handleConfirm={handleConfirmTurnOff}
+                handleClose={handleCloseTurnOff}
+                title='Confirm Turn Off'
+                iconColor='#FF4842'
+            />
         </>
     );
 };

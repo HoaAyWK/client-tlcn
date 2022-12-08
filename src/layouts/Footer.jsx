@@ -1,5 +1,7 @@
 import React from 'react';
 import { Container, Grid, Box, Typography, Stack, Paper } from '@mui/material';
+import { useLocation } from 'react-router-dom';
+
 import { Logo } from '../components';
 
 const services = ['Find Job', 'Create Post', 'Manage Post', 'Profile'];
@@ -7,6 +9,13 @@ const company = ['About Us', 'Contact Us'];
 const supports = ['University Of Technology And Education', 'Faculty For High Quality Training', 'Faculty For Information Technology'];
 
 const Footer = () => {
+    const { pathname } = useLocation();
+    const path = pathname.split('/');
+
+    if (path.includes('messaging')) {
+        return <></>
+    }
+
     return (
         <Paper sx={{marginTop: 'calc(5% + 0px)',
             width: '100%',

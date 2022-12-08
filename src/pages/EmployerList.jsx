@@ -101,7 +101,7 @@ const EmployerList = () => {
                                 </Typography>
                                 <Stack spacing={2}>
                                     {employers?.map(item => (
-                                        <EmployerItem employer={item} />
+                                        <EmployerItem key={item?._id} employer={item} />
                                     ))}
                                 </Stack>
                             </Box>

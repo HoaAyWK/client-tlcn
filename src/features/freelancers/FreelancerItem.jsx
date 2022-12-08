@@ -10,7 +10,11 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useChatContext } from 'stream-chat-react';
+
 import { Iconify, Label } from '../../components';
+import { useSelector } from 'react-redux';
+import { ROLES } from '../../constants';
 
 const Wrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -55,25 +59,40 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
 }));
 
 const FreelancerItem = ({ freelancer, skills }) => {
-    const navigate = useNavigate()
+    const freelancerId = freelancer.id || freelancer._id;
+    const { user } = useSelector(state => state.auth);
+    const { client, setActiveChannel } = useChatContext();
+    const navigate = useNavigate();
+
     const goFreelancerDetailPage = (id) => {
         navigate({
             pathname:'freelancer',
             search: `id=${id}`
-        })
-    }
+        });
+    };
+
+    const handleClickContact = async (e) => {
+        const conversation = client.channel('messaging', {
+            members: [e.target.value, client.userID]
+        });
+
+        await conversation.watch();
+        setActiveChannel(conversation);
+        navigate('/messaging');
+    };
+
     return (
         <Wrapper>
             <BoxStyle>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <RouterLink to={`/freelancer?id=${freelancer?.id}`}>
+                    <RouterLink to={`/freelancer?id=${freelancerId}`}>
                         <AvatarStyle src={freelancer?.user?.image} alt={freelancer?.firstName} />
                     </RouterLink>
                     <Stack spacing={0.5} sx={{ marginInlineStart: 2 }}>
                         <Stack direction='row' spacing={1}>
                             <Typography
                                 component={RouterLink}
-                                to={`/freelancer?id${freelancer?.id}`}
+                                to={`/freelancer?id${freelancerId}`}
                                 variant='body1'
                                 color='text.primary'
                                 sx={{ fontWeight: 600, textDecoration: 'none' }}
@@ -83,9 +102,9 @@ const FreelancerItem = ({ freelancer, skills }) => {
                             <Label
                                 variant='ghost'
                                 color={
-                                    freelancer?.user?.stars >= 0
-                                    && freelancer?.user?.stars < 2 && 'error' ||
-                                    freelancer?.user?.stars >= 2 && freelancer?.user?.stars < 3.5 && 'warning' ||
+                                    (freelancer?.user?.stars >= 0
+                                    && freelancer?.user?.stars < 2) && 'error' ||
+                                    (freelancer?.user?.stars >= 2 && freelancer?.user?.stars < 3.5) && 'warning' ||
                                     'success' 
                                 }
                             >
@@ -114,8 +133,22 @@ const FreelancerItem = ({ freelancer, skills }) => {
                     </Box>
                 </Stack>
                 <Stack direction='row' spacing={1}>
-                    <ButtonStyle color='success' variant='contained'>Contact</ButtonStyle>
-                    <ButtonStyle onClick={() => {goFreelancerDetailPage(freelancer?.id)}} color='primary' variant='contained'>Details</ButtonStyle>
+                    {user?.role === ROLES.EMPLOYER && (
+                        <ButtonStyle
+                            color='success'
+                            variant='contained'
+                            value={freelancer?.user?._id}
+                            onClick={handleClickContact}
+                        >
+                            Contact
+                        </ButtonStyle>
+                    )}
+                    <ButtonStyle
+                        onClick={() => {goFreelancerDetailPage(freelancerId)}}
+                        color='primary' variant='contained'
+                    >
+                        Details
+                    </ButtonStyle>
                 </Stack>
             </BoxStyle>
         </Wrapper>

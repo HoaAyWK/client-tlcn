@@ -12,6 +12,9 @@ const initialState = {
     getCurrentUserStatus: ACTION_STATUS.IDLE,
     freelancerRegisterStatus: ACTION_STATUS.IDLE,
     employerRegisterStatus: ACTION_STATUS.IDLE,
+
+    // for stream chat
+    userData: null
 };
 
 export const login = createAsyncThunk(
@@ -59,6 +62,7 @@ const authSlice = createSlice({
             state.freelancer = null;
             state.employer = null;
             state.userSkills = [];
+            state.userData = null;
             state.loginStatus = ACTION_STATUS.IDLE;
             state.getCurrentUserStatus = ACTION_STATUS.IDLE;
             state.employerRegisterStatus = ACTION_STATUS.IDLE;
@@ -91,15 +95,26 @@ const authSlice = createSlice({
                 state.getCurrentUserStatus = ACTION_STATUS.SUCCESSED;
                 state.user = action.payload.user;
                 state.userSkills = action.payload.userSkills;
+
+                const data = {
+                    id: action.payload.user.id,
+                    email: action.payload.user.email,
+                    image: action.payload.user.image
+                };
+
                 const { freelancer, employer } = action.payload;
 
                 if (freelancer) {
                     state.freelancer = freelancer;
+                    data.name = freelancer.firstName + ' ' + freelancer.lastName;
                 }
 
                 if (employer) {
                     state.employer = employer;
+                    data.name = employer.companyName;
                 }
+
+                state.userData = data;
             })
             .addCase(getCurrentUser.rejected, (state) => {
                 state.getCurrentUserStatus = ACTION_STATUS.FAILED;

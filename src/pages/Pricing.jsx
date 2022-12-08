@@ -40,7 +40,7 @@ const Pricing = () => {
                     <>
                         <Grid container spacing={2}>
                             {pricings?.map((item) => (
-                                <Grid item xs={12} sm={6} md={4} key={item}>
+                                <Grid item xs={12} sm={6} md={4} key={item?.id}>
                                     <PricingItem item={item} />
                                 </Grid>
                             ))}

@@ -47,7 +47,7 @@ const TopListFreelancer = () => {
                     <>
                         <Stack spacing={3}>
                             {freelancers.map((freelancer, index) => (
-                                <FreelancerItem freelancer={freelancer} skills={freelancerSkkills?.[index]} />
+                                <FreelancerItem key={index} freelancer={freelancer} skills={freelancerSkkills?.[index]} />
                             ))}
                         </Stack>
                         <Box

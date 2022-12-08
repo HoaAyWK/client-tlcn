@@ -1,7 +1,7 @@
 import React from 'react';
 import bigerpicture from '../../../assets/anh-gai-xinh-1.jpg'
 
-function LogoCompany({width='90px', height='90px'}) {
+function LogoCompany({ image, width='90px', height='90px' }) {
     return (
         <img 
             src={bigerpicture} 

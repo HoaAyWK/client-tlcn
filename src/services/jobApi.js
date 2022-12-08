@@ -12,9 +12,15 @@ class JobApi {
     };
 
     getJob = (id) => {
-        const url = `/job/find?id=${id}`
-        return axiosClient.get(url)
+        const url = `/job/single/${id}`;
+        return axiosClient.get(url);
     };
+
+    getMyJobs = () => {
+        const url = '/job/my';
+        return axiosClient.get(url);
+    };
+
 };
 
 export default new JobApi();

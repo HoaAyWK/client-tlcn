@@ -7,9 +7,15 @@ const initialState = {
     createJobStatus: ACTION_STATUS.IDLE,
     latestJobStatus: ACTION_STATUS.IDLE,
     jobDetailStatus: ACTION_STATUS.IDLE,
+    getMyJobsStatus: ACTION_STATUS.IDLE,
     latestJobCategories: [], 
     latestJobs: [],
-    jobD: null
+    myAvailableJobs: [],
+    myExpiredJobs: [],
+    appliedPerJobs: null,
+    job: null,
+    jobCategories: [],
+    jobApplies: [],
 };
 
 export const jobDetail = createAsyncThunk(
@@ -32,6 +38,13 @@ export const getLatestJobs = createAsyncThunk(
         const res =  await jobApi.getJobs(5, 1);
         console.log(res);
         return res;
+    }
+);
+
+export const getMyJobs = createAsyncThunk(
+    'jobs/myJobs',
+    async () => {
+        return await jobApi.getMyJobs();
     }
 );
 
@@ -78,10 +91,27 @@ const jobSlice = createSlice({
             })
             .addCase(jobDetail.fulfilled, (state, action) => {
                 state.jobDetailStatus = ACTION_STATUS.SUCCESSED
-                state.job = action.payload.job
+                state.job = action.payload.job;
+                state.jobApplies = action.payload.applies;
+                state.jobCategories = action.payload.categories;
             })
             .addCase(jobDetail.rejected, (state) => {
                 state.jobDetailStatus = ACTION_STATUS.FAILED
+            })
+
+            // get my
+
+            .addCase(getMyJobs.pending, (state) => {
+                state.getMyJobsStatus = ACTION_STATUS.LOADING
+            })
+            .addCase(getMyJobs.fulfilled, (state, action) => {
+                state.getMyJobsStatus = ACTION_STATUS.SUCCESSED
+                state.myAvailableJobs = action.payload.availableJobs;
+                state.myExpiredJobs = action.payload.expiredJobs;
+                state.appliedPerJobs = action.payload.appliesPerJob
+            })
+            .addCase(getMyJobs.rejected, (state) => {
+                state.getMyJobsStatus = ACTION_STATUS.FAILED
             })
     }
 });
