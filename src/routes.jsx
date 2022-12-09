@@ -14,12 +14,13 @@ import {
     SuccessPayment,
     Messaging,
     JobManagement,
-    ApplyManagement
+    ApplyManagement,
+    FreelancerDetail,
+    EmployerDetail
 } from './pages';
 
 import Layout from './layouts/Layout';
-import FreelancerDetail from './features/userDetail/FreelancerDetail';
-import EmployerDetail from './features/userDetail/EmployerDetail';
+
 
 const Router = () => {
     return useRoutes([
@@ -33,9 +34,9 @@ const Router = () => {
                 { path: 'profile', element: <Profile /> },
                 { path: 'create-job', element: <CreateJob />},
                 { path: 'job', element: <JobDetail />},
-                { path: 'employer', element: <EmployerDetail /> },
+                { path: 'employer/:id', element: <EmployerDetail /> },
                 { path: 'jobs', element: <JobListing /> },
-                { path: 'freelancer', element: <FreelancerDetail /> },
+                { path: 'freelancer/:id', element: <FreelancerDetail /> },
                 { path: 'job-detail/:id', element: <JobDetail /> },
                 { path: 'freelancers', element: <FreelancerList />},
                 { path: 'employers', element: <EmployerList />},

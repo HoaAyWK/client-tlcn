@@ -9,7 +9,9 @@ const initialState = freelancersAdaper.getInitialState({
     status: ACTION_STATUS.IDLE,
     turnOnStatus: ACTION_STATUS.IDLE,
     turnOffStatus: ACTION_STATUS.IDLE,
-    freelancerSkills: []
+    freelancerSkills: [],
+    freelancerSingle: null,
+    singleFreelancerStatus: ACTION_STATUS.IDLE,
 });
 
 export const getFreelancers = createAsyncThunk(
@@ -30,6 +32,13 @@ export const turnOff = createAsyncThunk(
     'freelancers/turnOff',
     async () => {
         return await freelancerApi.turnOffFindJob();
+    }
+);
+
+export const getSingleFreelancer = createAsyncThunk(
+    'freelancers/single',
+    async (id) => {
+        return await freelancerApi.getSingle(id)
     }
 );
 
@@ -79,6 +88,20 @@ const freelancerslice = createSlice({
         })
         .addCase(turnOff.rejected, (state) => {
             state.turnOffStatus = ACTION_STATUS.FAILED;
+        })
+
+
+        // Get single
+
+        .addCase(getSingleFreelancer.pending, (state) => {
+            state.singleFreelancerStatus = ACTION_STATUS.LOADING;
+        })
+        .addCase(getSingleFreelancer.fulfilled, (state, action) => {
+            state.singleFreelancerStatus = ACTION_STATUS.SUCCESSED;
+            state.freelancerSingle = action.payload.freelancer;
+        })
+        .addCase(getSingleFreelancer.rejected, (state) => {
+            state.singleFreelancerStatus = ACTION_STATUS.FAILED;
         })
     }
 })

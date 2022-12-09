@@ -12,3 +12,5 @@ export { default as SuccessPayment } from './SuccessPayment';
 export { default as Messaging } from './Messaging';
 export { default as JobManagement } from './JobManagement';
 export { default as ApplyManagement } from './ApplyManagement';
+export { default as FreelancerDetail } from './FreelancerDetail';
+export { default as EmployerDetail } from './EmployerDetail';

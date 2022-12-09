@@ -25,6 +25,11 @@ class FreelancerApi {
         const url = `/freelancer/turnOff`;
         return axiosClient.put(url);
     };
+
+    getSingle = (id) => {
+        const url = `/freelancer/single/${id}`;
+        return axiosClient.get(url);
+    }
 }
 
 export default new FreelancerApi();

@@ -5,6 +5,16 @@ class CommentApi {
         const url = `/comment/show?id=${id}`
         return axiosClient.get(url)
     };
+
+    getCommentsByReceiver = (id) => {
+        const url = `/comment/user?receiver=${id}`;
+        return axiosClient.get(url);
+    }
+
+    addComment = (data) => {
+        const url = `/comment/create`;
+        return axiosClient.post(url, data);
+    };
 }
 
 export default new CommentApi();

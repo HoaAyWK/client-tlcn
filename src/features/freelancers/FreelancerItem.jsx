@@ -66,8 +66,7 @@ const FreelancerItem = ({ freelancer, skills }) => {
 
     const goFreelancerDetailPage = (id) => {
         navigate({
-            pathname:'freelancer',
-            search: `id=${id}`
+            pathname: `freelancer/${id}`,
         });
     };
 
@@ -85,14 +84,14 @@ const FreelancerItem = ({ freelancer, skills }) => {
         <Wrapper>
             <BoxStyle>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <RouterLink to={`/freelancer?id=${freelancerId}`}>
+                    <RouterLink to={`/freelancer/${freelancerId}`}>
                         <AvatarStyle src={freelancer?.user?.image} alt={freelancer?.firstName} />
                     </RouterLink>
                     <Stack spacing={0.5} sx={{ marginInlineStart: 2 }}>
                         <Stack direction='row' spacing={1}>
                             <Typography
                                 component={RouterLink}
-                                to={`/freelancer?id${freelancerId}`}
+                                to={`/freelancer/${freelancerId}`}
                                 variant='body1'
                                 color='text.primary'
                                 sx={{ fontWeight: 600, textDecoration: 'none' }}
@@ -111,7 +110,7 @@ const FreelancerItem = ({ freelancer, skills }) => {
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Iconify icon='ic:twotone-star-outline' width={16} height={16} />
                                     <Typography variant='body2' sx={{ marginInlineStart: 0.5 }}>
-                                        {freelancer?.user?.stars}
+                                        {Math.round(freelancer?.user?.stars * 10) / 10 }
                                     </Typography>
                                 </Box>
                             </Label>

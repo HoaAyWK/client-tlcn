@@ -10,7 +10,9 @@ import searchReducer from '../features/search/searchSlice';
 import pricingReducer from '../features/pricing/pricingSlice';
 import checkoutReducer from '../features/checkout/checkoutSlice';
 import userReducer from '../features/userDetail/userSlice'
-import appliedReducer from '../features/applied/appliedSlice'
+import appliedReducer from '../features/applied/appliedSlice';
+import commentReducer from '../features/comment/commentSlice';
+import employerReducer from '../features/employers/employerSlice';
 
 export const store = configureStore({
     reducer: {
@@ -25,5 +27,7 @@ export const store = configureStore({
         checkout: checkoutReducer,
         user: userReducer,
         applied: appliedReducer,
+        comments: commentReducer,
+        employers: employerReducer,
     },
 });
