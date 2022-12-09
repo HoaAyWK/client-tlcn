@@ -9,6 +9,8 @@ const initialState = {
     receiverComments: [],
     getReceiverCommentsStatus: ACTION_STATUS.IDLE,
     addCommentStatus: ACTION_STATUS.IDLE,
+    senderComments: [],
+    getSenderCommentsStatus: ACTION_STATUS.IDLE,
 };
 
 export const getReceiverComments = createAsyncThunk(
@@ -17,6 +19,13 @@ export const getReceiverComments = createAsyncThunk(
         return await commentApi.getCommentsByReceiver(id);
     }
 );
+
+export const getSenderComments = createAsyncThunk(
+    'comments/sender',
+    async (id) => {
+        return await commentApi.getCommentsBySender(id);
+    }
+)
 
 export const addComment = createAsyncThunk(
     'comments/add',
@@ -58,7 +67,21 @@ const commentSlice = createSlice({
             .addCase(addComment.rejected, (state) => {
                 state.addCommentStatus = ACTION_STATUS.FAILED;
             })
-    }
+
+
+            // get sender comments
+
+            .addCase(getSenderComments.pending, (state) => {
+                state.getSenderCommentsStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(getSenderComments.fulfilled, (state, action) => {
+                state.getSenderCommentsStatus = ACTION_STATUS.SUCCESSED;
+                state.senderComments = action.payload.comments;
+            })
+            .addCase(getSenderComments.rejected, (state) => {
+                state.getSenderCommentsStatus = ACTION_STATUS.FAILED;
+            })
+    }   
 });
 
 const { actions, reducer } = commentSlice;

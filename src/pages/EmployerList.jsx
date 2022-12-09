@@ -56,8 +56,9 @@ const EmployerList = () => {
     } = methods;
     
     const onSubmit = (data) => {
-        navigate(`/employers?keyword=${data.jobSearch}`)
-            dispatch(searchEmployers({ keyword: data.jobSearch, page: 1 }));
+        const kw = data.jobSearch || '';
+        navigate(`/employers?keyword=${kw}`)
+        dispatch(searchEmployers({ keyword: kw, page: 1 }));
     };
 
     const handlePageChange = (e, page) => {
@@ -70,34 +71,20 @@ const EmployerList = () => {
 
     return (
         <Page title='Search Employer'>
-            <ContainerStyle maxWidth='lg'>
+            <ContainerStyle maxWidth='md'>
                 <Grid container spacing={2} sx={{ marginBlockStart: 5 }}>
-                    <Grid item xs={12} sm={9}>
+                    <Grid item xs={12}>
                         <InputField 
                             handleSubmit={handleSubmit} 
                             onSubmit={onSubmit} 
                             methods={methods}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
-                        <Box sx={{backgroundColor: 'rgba(2,175,116,.15)'}}>
-                            <Typography display='flex' justifyContent='center' alignItems='center' padding={'16px 0 16px'}>
-                                Category
-                            </Typography>
-                        </Box>
-                        <Box>
-                            {/* <CheckboxCategories 
-                                handleSubmit={handleSubmit}
-                                onSubmit={onSubmit}
-                                methods={methods}
-                            /> */}
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={9} sx={{ minHeight: '100vh' }}>
+                    <Grid item xs={12} sx={{ minHeight: '100vh' }}>
                         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                             <Box>
                                 <Typography margin={'45px 0'} variant='h5' fontWeight={600}>
-                                    {totalEmployerItem > 1 ? `Found ${totalEmployerItem} jobs for you` : `Found ${totalEmployerItem} job for you`}
+                                    {totalEmployerItem > 1 ? `Found ${totalEmployerItem} employers` : `Found ${totalEmployerItem} employer`}
                                 </Typography>
                                 <Stack spacing={2}>
                                     {employers?.map(item => (

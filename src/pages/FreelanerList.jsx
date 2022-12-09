@@ -57,12 +57,14 @@ const FreelanerList = () => {
     } = methods;
     
     const onSubmit = (data) => {
-        navigate(`/freelancers?keyword=${data.jobSearch}`)
-            dispatch(searchFreelancers({ keyword: data.jobSearch, page: 1 }));
+        const kw = data.jobSearch || '';
+        navigate(`/freelancers?keyword=${kw}`)
+            dispatch(searchFreelancers({ keyword: kw, page: 1 }));
     };
 
     const handlePageChange = (e, page) => {
-        navigate(`/freelancers?keyword=${keyword}&page=${page}`)
+        const kw = keyword || '';
+        navigate(`/freelancers?keyword=${kw}&page=${page}`)
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -71,34 +73,20 @@ const FreelanerList = () => {
 
     return (
         <Page title='Search Freelancer'>
-            <ContainerStyle maxWidth='lg'>
+            <ContainerStyle maxWidth='md'>
                 <Grid container spacing={2} sx={{ marginBlockStart: 5 }}>
-                    <Grid item xs={12} sm={9}>
+                    <Grid item xs={12}>
                         <InputField 
                             handleSubmit={handleSubmit} 
                             onSubmit={onSubmit} 
                             methods={methods}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
-                        <Box sx={{backgroundColor: 'rgba(2,175,116,.15)'}}>
-                            <Typography display='flex' justifyContent='center' alignItems='center' padding={'16px 0 16px'}>
-                                Category
-                            </Typography>
-                        </Box>
-                        <Box>
-                            {/* <CheckboxCategories 
-                                handleSubmit={handleSubmit}
-                                onSubmit={onSubmit}
-                                methods={methods}
-                            /> */}
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={9} sx={{ minHeight: '100vh' }}>
+                    <Grid item xs={12} sx={{ minHeight: '100vh' }}>
                         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                             <Box>
                                 <Typography margin={'45px 0'} variant='h5' fontWeight={600}>
-                                    {totalFreelancerItem > 1 ? `Found ${totalFreelancerItem} jobs for you` : `Found ${totalFreelancerItem} job for you`}
+                                    {totalFreelancerItem > 1 ? `Found ${totalFreelancerItem} freelancers` : `Found ${totalFreelancerItem} freelancer`}
                                 </Typography>
                                 <Stack spacing={2}>
                                     {freelancers?.map(item => (

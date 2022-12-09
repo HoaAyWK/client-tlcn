@@ -9,6 +9,11 @@ class CommentApi {
     getCommentsByReceiver = (id) => {
         const url = `/comment/user?receiver=${id}`;
         return axiosClient.get(url);
+    };
+
+    getCommentsBySender = (id) => {
+        const url = `/comment/sender?sender=${id}`;
+        return axiosClient.get(url);
     }
 
     addComment = (data) => {

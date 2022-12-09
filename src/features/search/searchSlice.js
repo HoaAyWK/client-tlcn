@@ -19,8 +19,8 @@ const initialState = {
 
 export const searchJobs = createAsyncThunk(
     'search/jobs',
-    async ({ keyword, page }) => {
-        const res =  await searchApi.searchJobs(keyword, page);
+    async ({ keyword, page, categories }) => {
+        const res =  await searchApi.searchJobs(keyword, page, categories);
         return res;
     }
 );

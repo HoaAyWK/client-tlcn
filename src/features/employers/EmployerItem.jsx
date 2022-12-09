@@ -8,7 +8,7 @@ import {
     Typography,
     Avatar,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { Iconify, Label } from '../../components';
 
@@ -55,6 +55,8 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
 }));
 
 const EmployerItem = ({ employer, skills }) => {
+    const navigate = useNavigate();
+
     const id = employer?.id || employer?._id;
     return (
         <Wrapper>
@@ -108,7 +110,15 @@ const EmployerItem = ({ employer, skills }) => {
                     </Box>
                 </Stack>
                 <Stack direction='row' spacing={1}>
-                    <ButtonStyle color='primary' variant='contained'>Details</ButtonStyle>
+                    <ButtonStyle
+                        color='primary'
+                        variant='contained'
+                        onClick={() => {
+                            navigate(`/employer/${employer?._id}`)
+                        }}
+                    >
+                        Details
+                    </ButtonStyle>
                 </Stack>
             </BoxStyle>
         </Wrapper>

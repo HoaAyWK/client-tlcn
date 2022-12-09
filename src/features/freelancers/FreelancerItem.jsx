@@ -66,7 +66,7 @@ const FreelancerItem = ({ freelancer, skills }) => {
 
     const goFreelancerDetailPage = (id) => {
         navigate({
-            pathname: `freelancer/${id}`,
+            pathname: `/freelancer/${id}`,
         });
     };
 
@@ -101,9 +101,9 @@ const FreelancerItem = ({ freelancer, skills }) => {
                             <Label
                                 variant='ghost'
                                 color={
-                                    (freelancer?.user?.stars >= 0
-                                    && freelancer?.user?.stars < 2) && 'error' ||
-                                    (freelancer?.user?.stars >= 2 && freelancer?.user?.stars < 3.5) && 'warning' ||
+                                    (freelancer?.user?.stars >= 0)
+                                    && (freelancer?.user?.stars < 2) && 'error' ||
+                                    (freelancer?.user?.stars) >= 2 && (freelancer?.user?.stars < 3.5) && 'warning' ||
                                     'success' 
                                 }
                             >

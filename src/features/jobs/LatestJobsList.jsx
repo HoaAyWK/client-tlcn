@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ACTION_STATUS } from '../../constants';
 import { getLatestJobs } from './jobSlice';
 import JobItem from './JobItem';
+import { useNavigate } from 'react-router-dom';
 
 const ButtonStyle = styled(Button)(({ theme }) => ({
     color: '#fff'
@@ -18,6 +19,7 @@ const SectonStyle = styled(Box)(({ theme }) => ({
 const LatestJobsList = () => {
     const { latestJobs, latestJobCategories, latestJobStatus } = useSelector(state => state.jobs);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (latestJobStatus === ACTION_STATUS.IDLE) {
@@ -52,7 +54,13 @@ const LatestJobsList = () => {
                         <Box
                             sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBlock: 4 }}
                         >
-                            <ButtonStyle color='success' variant='contained'>BROWSER MORE</ButtonStyle>
+                            <ButtonStyle
+                                color='success'
+                                variant='contained'
+                                onClick={() => navigate('/jobs')}
+                            >
+                                BROWSER MORE
+                            </ButtonStyle>
                         </Box>
                     </>
                 )}

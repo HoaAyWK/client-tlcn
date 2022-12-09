@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Paper,
@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ExpandLess, ExpandMore }  from '@mui/icons-material';
 
 import { Iconify, Label } from '../../components';
@@ -26,6 +26,9 @@ import ChangePasswordFrom from './ChangePasswordForm';
 import UpdateGeneralForm from './UpdateGeneralForm';
 import { fDate } from '../../utils/formatTime';
 import UpdateEmployerForm from './UpdateEmployerForm';
+import MyCommentTable from '../comment/MyCommentTable';
+import { getReceiverComments, getSenderComments } from '../comment/commentSlice';
+import EOCommentTable from '../comment/EOComentTable';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,
@@ -74,7 +77,18 @@ const EmployerProfile = () => {
     const [value, setValue] = useState('1');
     const [openUpdateEmployer, setOpenUpdateEmployer] = useState(true);
     const [openUpdateGeneral, setOpneUpdateGeneral] = useState(true);
+    const [openMyComments, setOpenMyComments] = useState(true);
+    const [openEOComments, setOpenEOComents] = useState(true);
     const { user, employer, userSkills } = useSelector(state => state.auth);
+    const { senderComments, receiverComments } = useSelector(state => state.comments);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (user?.id) {
+            dispatch(getSenderComments(user.id));
+            dispatch(getReceiverComments(user.id));
+        }
+    }, [user]);
 
     const handleChangeValue = (e, newValue) => {
         setValue(newValue);
@@ -86,6 +100,14 @@ const EmployerProfile = () => {
 
     const handleClickCollapseGeneral = () => {
         setOpneUpdateGeneral(prev => !prev);
+    };
+
+    const handleClickCollapseMyComments = () => {
+        setOpenMyComments(prev => !prev);
+    };
+
+    const handleClickCollapseEOComments = () => {
+        setOpenEOComents(prev => !prev);
     };
 
     return (
@@ -153,6 +175,8 @@ const EmployerProfile = () => {
                                 <Tab label='Overview' value='1' />
                                 <Tab label='Settings' value='2' />
                                 <Tab label='Change Password' value='3' />
+                                <Tab label='Comments' value='4' />
+                                <Tab label='Payments' value='5' />
                             </TabList>
                         </Box>
                         <TabPanel value='1'>
@@ -246,7 +270,7 @@ const EmployerProfile = () => {
                                 <UpdateGeneralForm />
                             </Collapse>
                             <Divider sx={{ marginBlock: 2 }} />
-                            <ListItemButton sx={{ marginBlock: 2 }} onClick={handleClickCollapseDetails} >
+                            <ListItemButton sx={{ marginBlock: 2 }} onClick={handleClickCollapseGeneral} >
                                 <ListItemText primary='Details' />
                                 {openUpdateEmployer ? <ExpandLess /> : <ExpandMore />}
                             </ListItemButton>
@@ -256,6 +280,25 @@ const EmployerProfile = () => {
                         </TabPanel>
                         <TabPanel value='3'>
                             <ChangePasswordFrom />
+                        </TabPanel>
+                        <TabPanel value='4'>
+                            <ListItemButton sx={{ marginBlock: 2 }} onClick={handleClickCollapseMyComments} >
+                                <ListItemText primary='My Comments' />
+                                {openMyComments ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openMyComments} timeout="auto" unmountOnExit>
+                                <MyCommentTable comments={senderComments} />
+                            </Collapse>
+                            <ListItemButton sx={{ marginBlock: 2 }} onClick={handleClickCollapseEOComments} >
+                                <ListItemText primary='Everyone Comments' />
+                                {openEOComments ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openEOComments} timeout="auto" unmountOnExit>
+                                <EOCommentTable comments={receiverComments} />
+                            </Collapse>
+                        </TabPanel>
+                        <TabPanel value='5'>
+                            Hello
                         </TabPanel>
                     </TabContext>
                 </PaperStyle>

@@ -38,28 +38,28 @@ function ItemResult({ item }) {
 
     const handleApply = async (e) => {
         if (!freelancer || !user) {
-            enqueueSnackbar('Please login!', { variant: 'error' });
-        }
-
-        try {
-            const data = { freelancer: freelancer.id, job: e.target.value };
-            const actionResult = await dispatch(addApply(data));
-            const result = unwrapResult(actionResult);
-            console.log(result);
-
-            if (result) {
-                const freelancerId = user?.id;
-                const username = freelancer?.firstName + " " + freelancer?.lastName;
-                const jobId = item?._id;
-                const jobName = item?.name;
-                const avatar = user?.image;
-                socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: item?.employer?.user?._id });
-                enqueueSnackbar('Apply successfully', { variant: 'success' });
+            enqueueSnackbar('Please login first!', { variant: 'error' });
+            
+            try {
+                const data = { freelancer: freelancer.id, job: e.target.value };
+                const actionResult = await dispatch(addApply(data));
+                const result = unwrapResult(actionResult);
+    
+                if (result) {
+                    const freelancerId = user?.id;
+                    const username = freelancer?.firstName + " " + freelancer?.lastName;
+                    const jobId = item?._id;
+                    const jobName = item?.name;
+                    const avatar = user?.image;
+                    socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: item?.employer?.user?._id });
+                    enqueueSnackbar('Apply successfully', { variant: 'success' });
+                }
+    
+            } catch (error) {
+                enqueueSnackbar(error.message, { variant: 'error' });
             }
-
-        } catch (error) {
-            enqueueSnackbar(error.message, { variant: 'error' });
         }
+
     };
 
     return (
@@ -78,7 +78,7 @@ function ItemResult({ item }) {
                 paddingInline: 2, 
                 display: 'flex'
             }}>
-                <RouterLink to={`/employers/${item?._id}`}>
+                <RouterLink to={`/employer/${item?.employer?._id}`}>
                     <AvatarSyle src={item?.employer?.user?.image} />
                 </RouterLink>
                 <Grid container flex={1} alignItems="center" spacing={1}>
@@ -88,14 +88,17 @@ function ItemResult({ item }) {
                                 style={{
                                     fontWeight: 600,
                                     color: 'rgb(50 50 50 / 87%)',
+                                    textDecoration: 'none'
                                 }} 
                                 variant='body1'
+                                component={RouterLink}
+                                to={`/job-detail/${item?._id}`}
                             >
                                 {item?.name}
                             </Typography>
                             <Typography
                                 component={RouterLink}
-                                to={`/employers/${item._id}`}
+                                to={`/employer/${item?.employer?._id}`}
                                 variant='body1'
                                 color='text.secondary'
                                 sx={{

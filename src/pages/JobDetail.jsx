@@ -3,6 +3,8 @@ import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material/styles';
 import { Avatar, Box, Container, Grid, Paper, Tooltip, Typography, Stack, Divider, Button} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux'
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 
 import JobInfoLine from '../features/jobs/JobInfoLine'
 import { fDate } from '../utils/formatTime'
@@ -11,6 +13,8 @@ import { jobDetail } from '../features/jobs/jobSlice';
 import { checkApply } from '../features/applied/appliedSlice';
 import { ACTION_STATUS, ROLES } from '../constants';
 import Apply from '../features/applied/Apply';
+import socket from '../services/socket';
+import { addApply } from '../features/applied/appliedSlice';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,
@@ -25,23 +29,44 @@ const PaperStyle = styled(Paper)(({ theme }) => ({
 function JobDetail() {
     const dispatch = useDispatch()
     const { job, jobApplies, jobCategories, jobDetailStatus } = useSelector(state => state.jobs);
-    const { user, employer } = useSelector(state => state.auth);
-    const navigate = useNavigate();
+    const { user, employer, freelancer } = useSelector(state => state.auth);
     const { id } = useParams();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const showEmployer = (id) => {
-        navigate({
-            path: "/employer",
-            search: `id=${id}`
-        })
-    }
     useEffect(() => {
         if (id) {
             dispatch(jobDetail(id))
-            dispatch(checkApply(id))
+            // dispatch(checkApply(id))
         }
         
     }, [id, dispatch]);
+
+    const handleApply = async (e) => {
+        if (!freelancer || !user) {
+            enqueueSnackbar('Please login first!', { variant: 'error' });
+        } else {
+            try {
+                const data = { freelancer: freelancer?.id, job: e.target.value };
+                const actionResult = await dispatch(addApply(data));
+                const result = unwrapResult(actionResult);
+    
+                if (result) {
+                    const freelancerId = user?.id;
+                    const username = freelancer?.firstName + " " + freelancer?.lastName;
+                    const jobId = job?._id;
+                    const jobName = job?.name;
+                    const avatar = user?.image;
+                    socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: job?.employer?.user?._id });
+                    enqueueSnackbar('Apply successfully', { variant: 'success' });
+                }
+    
+            } catch (error) {
+                enqueueSnackbar(error.message, { variant: 'error' });
+            }
+        }
+
+    };
+
 
     if (jobDetailStatus !== ACTION_STATUS.SUCCESSED) {
         return (
@@ -145,7 +170,13 @@ function JobDetail() {
                                         )}
                                     </Box>
                                     {user?.role !== ROLES.EMPLOYER && (
-                                        <Button variant='contained'>Apply</Button>
+                                        <Button
+                                            variant='contained'
+                                            onClick={handleApply}
+                                            value={job?._id}
+                                        >
+                                            Apply
+                                        </Button>
                                     )}
                                 </PaperStyle>
                                 

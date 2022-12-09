@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Paper,
@@ -17,13 +17,16 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ExpandLess, ExpandMore }  from '@mui/icons-material';
 
 import { Label } from '../../components';
 import UpoadFreelancerFrom from './UpoadFreelancerFrom';
 import ChangePasswordFrom from './ChangePasswordForm';
 import UpdateGeneralForm from './UpdateGeneralForm';
+import MyCommentTable from '../comment/MyCommentTable';
+import { getReceiverComments, getSenderComments } from '../comment/commentSlice';
+import EOCommentTable from '../comment/EOComentTable';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,
@@ -68,7 +71,19 @@ const FreelancerProfile = () => {
     const [value, setValue] = useState('1');
     const [openUpdateFreelancer, setOpenUpdateFeelancer] = useState(true);
     const [openUpdateGeneral, setOpneUpdateGeneral] = useState(true);
+    const [openMyComments, setOpenMyComments] = useState(true);
+    const [openEOComments, setOpenEOComents] = useState(true);
     const { user, freelancer, userSkills } = useSelector(state => state.auth);
+    const { senderComments, receiverComments } = useSelector(state => state.comments);
+    
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (user?.id) {
+            dispatch(getSenderComments(user.id));
+            dispatch(getReceiverComments(user.id));
+        }
+    }, [user]);
 
     const handleChangeValue = (e, newValue) => {
         setValue(newValue);
@@ -80,6 +95,14 @@ const FreelancerProfile = () => {
 
     const handleClickCollapseGeneral = () => {
         setOpneUpdateGeneral(prev => !prev);
+    };
+
+    const handleClickCollapseMyComments = () => {
+        setOpenMyComments(prev => !prev);
+    };
+
+    const handleClickCollapseEOComments = () => {
+        setOpenEOComents(prev => !prev);
     };
 
     return (
@@ -155,6 +178,7 @@ const FreelancerProfile = () => {
                                 <Tab label='Overview' value='1' />
                                 <Tab label='Settings' value='2' />
                                 <Tab label='Change Password' value='3' />
+                                <Tab label='Comments' value='4' />
                             </TabList>
                         </Box>
                         <TabPanel value='1'>
@@ -213,6 +237,22 @@ const FreelancerProfile = () => {
                         </TabPanel>
                         <TabPanel value='3'>
                             <ChangePasswordFrom />
+                        </TabPanel>
+                        <TabPanel value='4'>
+                            <ListItemButton sx={{ marginBlock: 2 }} onClick={handleClickCollapseMyComments} >
+                                <ListItemText primary='My Comments' />
+                                {openMyComments ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openMyComments} timeout="auto" unmountOnExit>
+                                <MyCommentTable comments={senderComments} />
+                            </Collapse>
+                            <ListItemButton sx={{ marginBlock: 2 }} onClick={handleClickCollapseEOComments} >
+                                <ListItemText primary='Everyone Comments' />
+                                {openEOComments ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openEOComments} timeout="auto" unmountOnExit>
+                                <EOCommentTable comments={receiverComments} />
+                            </Collapse>
                         </TabPanel>
                     </TabContext>
                 </PaperStyle>

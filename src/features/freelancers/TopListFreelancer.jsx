@@ -53,7 +53,13 @@ const TopListFreelancer = () => {
                         <Box
                             sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBlock: 4 }}
                         >
-                            <ButtonStyle color='success' variant='contained'>BROWSER MORE</ButtonStyle>
+                            <ButtonStyle
+                                color='success'
+                                variant='contained'
+                                onClick={() => navigate('/freelancers')}
+                            >
+                                BROWSER MORE
+                            </ButtonStyle>
                         </Box>
                     </>
                 )}

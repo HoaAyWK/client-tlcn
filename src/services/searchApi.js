@@ -1,9 +1,14 @@
 import axiosClient from "./axiosClient";
 
 class SearchApi {
-    searchJobs = (keyword, page) => {
+    searchJobs = (keyword, page, categories) => {
         console.log(page)
-        const url = `/search/jobs?name=${keyword}&company=${keyword}&limit=5&page=${page}`;
+        let url = `/search/jobs?name=${keyword}&company=${keyword}&limit=5&page=${page}`;
+
+        if (categories) {
+            url = url + `&categories=${categories}`;
+        }
+        
         return axiosClient.get(url);
     }
 

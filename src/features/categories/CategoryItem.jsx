@@ -3,6 +3,7 @@ import { Box, Typography, Stack, Card, CardActionArea, CardMedia, CardContent } 
 import { alpha, styled } from '@mui/material/styles';
 
 import { Label } from '../../components';
+import { useNavigate } from 'react-router-dom';
 
 const CardStyle = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -31,8 +32,10 @@ const BoxStyle = styled(Box)(({ theme }) => ({
 
 const CategoryItem = ({ category, countPerCates }) => {
     const count = countPerCates?.[category.id] ? countPerCates[category.id] : 0;
+    const navigate = useNavigate();
+
     return (
-        <CardStyle>
+        <CardStyle onClick={() => navigate(`/jobs?categories=${category.id}`)}>
             <BoxStyle>
                 <Stack spacing={1}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

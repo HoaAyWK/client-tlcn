@@ -93,9 +93,8 @@ const pages = [
 ];
 const employerPages = [
     { name: 'Jobs', path: '/jobs' },
-    { name: 'Employers', path: '/employers' },
-    { name: 'Pricing', path: '/pricing' },
     { name: 'Freelancers', path: '/freelancers' },
+    { name: 'Pricing', path: '/pricing' },
 ];
 
 const HideOnScroll = (props) => {
