@@ -15,6 +15,7 @@ import { useChatContext } from 'stream-chat-react';
 import { Iconify, Label } from '../../components';
 import { useSelector } from 'react-redux';
 import { ROLES } from '../../constants';
+import { useSnackbar } from 'notistack';
 
 const Wrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -63,6 +64,7 @@ const FreelancerItem = ({ freelancer, skills }) => {
     const { user } = useSelector(state => state.auth);
     const { client, setActiveChannel } = useChatContext();
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
     const goFreelancerDetailPage = (id) => {
         navigate({
@@ -71,13 +73,17 @@ const FreelancerItem = ({ freelancer, skills }) => {
     };
 
     const handleClickContact = async (e) => {
-        const conversation = client.channel('messaging', {
-            members: [e.target.value, client.userID]
-        });
-
-        await conversation.watch();
-        setActiveChannel(conversation);
-        navigate('/messaging');
+        if (client) {
+            const conversation = client.channel('messaging', {
+                members: [e.target.value, client.userID]
+            });
+    
+            await conversation.watch();
+            setActiveChannel(conversation);
+            navigate('/messaging');
+        } else {
+            enqueueSnackbar('Something went wrong', { variant: 'error' });
+        }
     };
 
     return (

@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 class SkillApi {
     getSkills = () => {
-        const url = '/skills/show';
+        const url = '/skills';
         return axiosClient.get(url);
     };
 

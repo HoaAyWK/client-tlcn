@@ -45,13 +45,13 @@ const UpoadFreelancerFrom = () => {
         firstName: Yup.string().required('First Name is required'),
         lastName: Yup.string().required('Last Name is required'),
         gender: Yup.string().required('Gender is required'),
-        experiences: Yup.string().required('Experiences is required'),
+        doneJobs: Yup.string().required('Experiences is required'),
     });
 
     const defaultValues = {
-        firstName: freelancer?.lastName,
-        lastName: freelancer?.firstName,
-        experiences: freelancer?.doneJobs,
+        firstName: freelancer?.firstName,
+        lastName: freelancer?.lastName,
+        doneJobs: freelancer?.doneJobs,
         gender: freelancer?.gender ? freelancer?.gender : 'Male',
     };
     
@@ -97,7 +97,7 @@ const UpoadFreelancerFrom = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <RHFTextField multiline minRows={3} name='experiences' label='Experiences *' />
+                    <RHFTextField multiline minRows={3} name='doneJobs' label='Experiences *' />
                 </Grid>
                 <Grid item xs={12}>
                     <RHFRadioGroup name="gender"

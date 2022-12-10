@@ -15,6 +15,7 @@ import { getSkills, selectAllSkills } from '../skills/skillSlice';
 import { ACTION_STATUS } from '../../constants';
 import { refresh, updateGeneral } from './profileSlice';
 import { getCurrentUser } from '../auth/authSlice';
+import { getLatestJobs, getMyJobs } from '../jobs/jobSlice';
 
 const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
     backgroundColor: theme.palette.success.dark,
@@ -37,8 +38,15 @@ const UpdateGeneralForm = () => {
     }, [userSkills]);
 
     useEffect(() => {
+        async function fetchSkills() {
+            try {
+                const actionResult = await dispatch(getSkills());
+            } catch (error) {
+                console.log(error);
+            }
+        }
         if (skillsStatus === ACTION_STATUS.IDLE) {
-            dispatch(getSkills());
+            fetchSkills();
         }
     }, [skillsStatus, dispatch]);
 
@@ -84,8 +92,9 @@ const UpdateGeneralForm = () => {
         try {
             const actionResult = await dispatch(updateGeneral(data));
             const result = unwrapResult(actionResult);
-
+            
             if (result) {
+                dispatch(getLatestJobs());
                 enqueueSnackbar('Updated successfully', { variant: 'success' });
             }
         } catch (error) {

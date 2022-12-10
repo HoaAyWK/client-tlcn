@@ -117,8 +117,8 @@ const EmployerDetail = () => {
                             <Box
                                 sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 2 }}
                             >
-                                {user?.image ? (
-                                    <AvatarStyle src={employer?.user.image} alt={employer?.user?.email} />
+                                {employer?.user?.image ? (
+                                    <AvatarStyle src={employer?.user?.image} alt={employer?.user?.email} />
                                 ) : (
                                     <AvatarStyle>{employer?.companyName?.[0]}</AvatarStyle>
                                 )}

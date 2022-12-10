@@ -50,7 +50,7 @@ const Apply = ({ applied }) => {
                 <Grid item xs={12} sm={5}>
                     <Stack spacing={1} direction='row'>
                         {applied?.freelancer?.user?.image ? (
-                            <RouterLink to={`/freelancers/${applied?.freelancer?._id}`}>
+                            <RouterLink to={`/freelancer/${applied?.freelancer?._id}`}>
                                 <Avatar
                                     sx={{
                                         width: {
@@ -67,7 +67,7 @@ const Apply = ({ applied }) => {
                                 />
                             </RouterLink>
                         ) : (
-                            <RouterLink to={`/freelancers/${applied?.freelancer?._id}`}>
+                            <RouterLink to={`/freelancer/${applied?.freelancer?._id}`}>
                                 <LetterAvatar name={applied?.freelancer?.firstName} />
                             </RouterLink>
                         )}
@@ -123,6 +123,9 @@ const Apply = ({ applied }) => {
                             <Button
                                 color='primary'
                                 size='small'
+                                onClick={() => {
+                                    navigate(`/freelancer/${applied?.freelancer?._id}`)
+                                }}
                             >
                                 View Profile
                             </Button>

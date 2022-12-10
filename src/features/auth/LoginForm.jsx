@@ -67,6 +67,7 @@ const LoginForm = (props) => {
                 enqueueSnackbar('Login successfully', { variant: 'success' });
                 reset();
                 handleClose();
+                window.location.reload();
             }
 
         } catch (error) {

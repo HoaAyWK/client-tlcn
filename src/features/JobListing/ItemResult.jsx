@@ -37,28 +37,32 @@ function ItemResult({ item }) {
 
 
     const handleApply = async (e) => {
-        if (!freelancer || !user) {
-            enqueueSnackbar('Please login first!', { variant: 'error' });
-            
-            try {
-                const data = { freelancer: freelancer.id, job: e.target.value };
-                const actionResult = await dispatch(addApply(data));
-                const result = unwrapResult(actionResult);
-    
-                if (result) {
-                    const freelancerId = user?.id;
-                    const username = freelancer?.firstName + " " + freelancer?.lastName;
-                    const jobId = item?._id;
-                    const jobName = item?.name;
-                    const avatar = user?.image;
-                    socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: item?.employer?.user?._id });
-                    enqueueSnackbar('Apply successfully', { variant: 'success' });
-                }
-    
-            } catch (error) {
-                enqueueSnackbar(error.message, { variant: 'error' });
-            }
+        if (!user) {
+            return  enqueueSnackbar('Please login first!', { variant: 'error' });
         }
+
+        if (!freelancer) {
+            return enqueueSnackbar('Only Freelancer can apply!', { variant: 'error' });
+        }
+        
+        try {
+            const data = { freelancer: freelancer?.id, job: e.target.value };
+            const actionResult = await dispatch(addApply(data));
+            const result = unwrapResult(actionResult);
+
+            if (result) {
+                const freelancerId = user?.id;
+                const username = freelancer?.firstName + " " + freelancer?.lastName;
+                const jobId = item?._id;
+                const jobName = item?.name;
+                const avatar = user?.image;
+                socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: item?.employer?.user?._id });
+                enqueueSnackbar('Apply successfully', { variant: 'success' });
+            }
+
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }      
 
     };
 

@@ -11,8 +11,14 @@ import {
     CardActionArea
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import { unwrapResult } from '@reduxjs/toolkit';
+
 import { Iconify, Label } from '../../components';
 import { fDate } from '../../utils/formatTime'
+import socket from '../../services/socket';
+import { addApply } from '../applied/appliedSlice';
 
 const ButtonStyle = styled(Button)(({ theme }) => ({
     color: '#fff'
@@ -65,11 +71,42 @@ const Wrapper = styled(Box)(({ theme }) => ({
 }))
  
 const JobItem = ({ job, categories }) => {
-    
+    const { user, freelancer } = useSelector(state => state.auth);
+    const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useDispatch();
+
+    const handleClickApply = async (e) => {
+        if (!user) {
+            return enqueueSnackbar('Please login first!', { variant: 'error' });
+        }
+
+        if (!freelancer) {
+            return enqueueSnackbar('Only Freelancer can apply!', { variant: 'error' });
+        }
+
+        try {
+            const data = { freelancer: freelancer.id, job: e.target.value };
+            const actionResult = await dispatch(addApply(data));
+            const result = unwrapResult(actionResult);
+
+            if (result) {
+                const freelancerId = user?.id;
+                const username = freelancer?.firstName + " " + freelancer?.lastName;
+                const jobId = job?.id;
+                const jobName = job?.name;
+                const avatar = user?.image;
+                socket.emit('apply job', { freelancerId, username, avatar, jobId, jobName, to: job?.employer?.user?.id });
+                enqueueSnackbar('Apply successfully', { variant: 'success' });
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    };
+
     return (
         <Wrapper>
             <BoxStyle>
-                <RouterLink to={`/job?id=${job?.id}`}>
+                <RouterLink to={`/employer/${job?.employer?.id}`}>
                     <CardStyle>
                         <CardMediaStyle
                             component='img'
@@ -88,12 +125,16 @@ const JobItem = ({ job, categories }) => {
                     }}
                 >
                     <Stack spacing={0} sx={{ marginInlineStart: 3 }}>
-                        <Typography variant='body1' sx={{ fontWeight: 600 }}>
+                        <Typography variant='body1'
+                            component={RouterLink} to={`/job-detail/${job?.id}`}
+                            color='text.primary'
+                            sx={{ textDecoration: 'none', fontWeigth: 600 }}
+                        >
                             {job?.name.length > 160 ? `${job?.name.slice(0, 160)}...` : job?.name}
                         </Typography>
                         <Typography
                             component={RouterLink}
-                            to={`/employers/${job?.employer?.id}`}
+                            to={`/employer/${job?.employer?.id}`}
                             variant='body2'
                             color='text.secondary'
                             sx={{ textDecoration: 'none', display: 'block' }}
@@ -153,7 +194,12 @@ const JobItem = ({ job, categories }) => {
                         {fDate(job?.expireDate)}
                     </Typography>
                 </Stack>
-                <ButtonStyle color='success' variant='contained'>
+                <ButtonStyle
+                    color='success'
+                    variant='contained'     
+                    onClick={handleClickApply}
+                    value={job?.id}
+                >
                     Apply
                 </ButtonStyle>
             </ItemButton>

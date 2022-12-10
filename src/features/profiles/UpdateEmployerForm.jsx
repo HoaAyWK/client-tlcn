@@ -69,7 +69,12 @@ const UpdateEmployerForm = () => {
 
     const FreelancerSchema = Yup.object().shape({
         companyName: Yup.string().required('Comapny Name is required'),
-        companySize: Yup.string().required('Company Size is required'),
+        companySize: Yup.string().required('Company Size is required')
+            .test(
+                'Is positive?', 
+                'Company Size must be greater than 0', 
+                (value) => value > 0
+            ),
         companyType: Yup.string().required('Company Type is required'),
         foundingDate: Yup.date().required('Founding Date is required'),
     });

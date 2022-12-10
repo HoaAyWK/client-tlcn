@@ -3,9 +3,10 @@ import { Stack, Typography, Divider, Box } from '@mui/material';
 
 import Comment from './Comment';
 import AddComment from './AddComment';
+import { useSelector } from 'react-redux';
 
 const Comments = ({ comments, receiver, getSingleAction }) => {
-
+    const { user } = useSelector(state => state.auth);
     return (
         <Box
             sx={{
@@ -17,7 +18,9 @@ const Comments = ({ comments, receiver, getSingleAction }) => {
                 Comments
             </Typography>
             <Divider sx={{ marginBlock: 2 }} />
-            <AddComment receiver={receiver} getSingleAction={getSingleAction} />
+            {user && (
+                <AddComment receiver={receiver} getSingleAction={getSingleAction} />
+            )}
             {comments?.length > 0 && (
                 <>
                     <Divider sx={{ marginBlock: 2 }} />

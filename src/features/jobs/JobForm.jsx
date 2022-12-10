@@ -12,7 +12,7 @@ import { FormProvider, RHFTextField, RHFDateTextField, RHFMultiSelect } from '..
 import { fYMDate } from '../../utils/formatTime';
 import { getCategories, selectAllCategories } from '../categories/categorySlice';
 import { ACTION_STATUS } from '../../constants';
-import { createJob } from './jobSlice';
+import { createJob, getMyJobs } from './jobSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
@@ -34,9 +34,15 @@ const JobForm = () => {
     const JobSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
         description: Yup.string().required('Description is reuquired'),
-        price: Yup.number().required('Price is required'),
+        price: Yup.number().required('Price is required')
+            .test(
+                'Is positive?', 
+                'Price must be greater than 0', 
+                (value) => value > 0
+            ),
         startDate: Yup.date().required('Start Date is required'),
-        expireDate: Yup.date().required('Expire Date is required'),
+        expireDate: Yup.date().required('Expire Date is required')
+            .when("startDate", (startDate, yup) => startDate && yup.min(startDate, "Expire Date must larger than Start Date")),
         categories: Yup.array()
     });
 
@@ -69,6 +75,7 @@ const JobForm = () => {
             if (result) {
                 enqueueSnackbar('Created successfully', { variant: 'success' });
                 reset();
+                dispatch(getMyJobs());
             }
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' })

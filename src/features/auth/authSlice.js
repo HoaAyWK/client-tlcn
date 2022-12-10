@@ -25,7 +25,7 @@ export const login = createAsyncThunk(
     async (body, thunkApi) => {
         const res = await authApi.login(body);
         localStorage.setItem('accessToken', JSON.stringify(res.accessToken));
-        localStorage.setItem('streamToken', JSON.stringify(res.streamToken))
+        localStorage.setItem('streamToken', JSON.stringify(res.streamToken)); 
         
         thunkApi.dispatch(getCurrentUser());
 
@@ -36,7 +36,27 @@ export const login = createAsyncThunk(
 export const getCurrentUser = createAsyncThunk(
     'auth/getCurrentUser',
     async () => {
-        return await authApi.getCurrentUser();
+        const res = await authApi.getCurrentUser();
+
+        const { freelancer, employer, user } = res;
+
+        const userData = {
+            id: user.id,
+            email: user.email,
+            image: user.image
+        };
+
+        if (freelancer) {
+            userData.name = freelancer.firstName + ' ' + freelancer.lastName;
+        }
+
+        if (employer) {
+            userData.name = employer.companyName;
+        }
+
+        localStorage.setItem('userData', JSON.stringify(userData));
+
+        return res;
     }
 );
 
@@ -76,7 +96,7 @@ export const resetPassword = createAsyncThunk(
         const res = await authApi.resetPassword(token);
 
         localStorage.setItem('accessToken', JSON.stringify(res.accessToken));
-        localStorage.setItem('streamToken', JSON.stringify(res.streamToken))
+        localStorage.setItem('streamToken', JSON.stringify(res.streamToken));
         
         thunkApi.dispatch(getCurrentUser());
 
@@ -103,6 +123,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
+            localStorage.setItem('userData', null);
             localStorage.setItem('accessToken', null);
             localStorage.setItem('streamToken', null);
             localStorage.setItem('sessionId', null);
@@ -121,7 +142,7 @@ const authSlice = createSlice({
         },
         resetResetPasswordStatus: (state) => {
             state.resetPasswordStatus = ACTION_STATUS.IDLE;
-        }
+        },
     },
     extraReducers: (builder) => {
         builder

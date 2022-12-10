@@ -125,7 +125,7 @@ function JobDetail() {
                                                     <Typography
                                                         
                                                         component={RouterLink}
-                                                        to={`/employer?id=${job?.employer?.id}`}
+                                                        to={`/employer/${job?.employer?._id}`}
                                                         color='text.primary'
                                                         sx={{
                                                             textDecoration: 'none',

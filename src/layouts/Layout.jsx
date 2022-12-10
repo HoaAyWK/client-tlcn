@@ -23,11 +23,12 @@ export default function Layout() {
     const [accessToken] = useLocalStorage('accessToken', null);
     const [streamToken] = useLocalStorage('streamToken', null);
     const [sessionId] = useLocalStorage('sessionId', null);
+    const [userData] = useLocalStorage('userData', null);
     const [client, setClient] = useState(null);
     const [unreadStreamMessages, setUnreadStreamMessages] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [unreadMessages, setUnreadMessages] = useState(0);
-    const { user, userData, getCurrentUserStatus } = useSelector(state => state.auth);
+    const { user, getCurrentUserStatus } = useSelector(state => state.auth);
     
     const dispatch = useDispatch();
 
