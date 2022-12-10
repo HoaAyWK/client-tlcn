@@ -12,7 +12,10 @@ const initialState = {
     getCurrentUserStatus: ACTION_STATUS.IDLE,
     freelancerRegisterStatus: ACTION_STATUS.IDLE,
     employerRegisterStatus: ACTION_STATUS.IDLE,
-
+    changePasswordStatus: ACTION_STATUS.IDLE,
+    confirmEmailStatus: ACTION_STATUS.IDLE,
+    forgotPasswordStatus: ACTION_STATUS.IDLE,
+    resetPasswordStatus: ACTION_STATUS.IDLE,
     // for stream chat
     userData: null
 };
@@ -53,11 +56,56 @@ export const employerRegister = createAsyncThunk(
     }
 );
 
+export const changePassword = createAsyncThunk(
+    'auth/changePassword',
+    async (data) => {
+        return await authApi.changePassword(data);
+    }
+);
+
+export const forgotPassword = createAsyncThunk(
+    'auth/forgotPassword',
+    async (data) => {
+        return await authApi.forgotPassword(data);
+    }
+);
+
+export const resetPassword = createAsyncThunk(
+    'auth/resetPassword',
+    async (token, thunkApi) => {
+        const res = await authApi.resetPassword(token);
+
+        localStorage.setItem('accessToken', JSON.stringify(res.accessToken));
+        localStorage.setItem('streamToken', JSON.stringify(res.streamToken))
+        
+        thunkApi.dispatch(getCurrentUser());
+
+        return res;
+    }
+);
+
+export const confirmEmail = createAsyncThunk(
+    'auth/confirmEmail',
+    async (token, thunkApi) => {
+        const res = await authApi.confirmEmail(token);
+
+        localStorage.setItem('accessToken', JSON.stringify(res.accessToken));
+        localStorage.setItem('streamToken', JSON.stringify(res.streamToken))
+        
+        thunkApi.dispatch(getCurrentUser());
+
+        return res;
+    }
+);
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
         logout: (state) => {
+            localStorage.setItem('accessToken', null);
+            localStorage.setItem('streamToken', null);
+            localStorage.setItem('sessionId', null);
             state.user = null;
             state.freelancer = null;
             state.employer = null;
@@ -67,8 +115,12 @@ const authSlice = createSlice({
             state.getCurrentUserStatus = ACTION_STATUS.IDLE;
             state.employerRegisterStatus = ACTION_STATUS.IDLE;
             state.freelancerRegisterStatus = ACTION_STATUS.IDLE;
-            localStorage.setItem('accessToken', null);
-            localStorage.setItem('streamToken', null);
+        },
+        resetConfirmEmailStatus: (state) => {
+            state.confirmEmailStatus = ACTION_STATUS.IDLE;
+        },
+        resetResetPasswordStatus: (state) => {
+            state.resetPasswordStatus = ACTION_STATUS.IDLE;
         }
     },
     extraReducers: (builder) => {
@@ -143,10 +195,60 @@ const authSlice = createSlice({
             .addCase(employerRegister.rejected, (state) => {
                 state.employerRegisterStatus = ACTION_STATUS.FAILED;
             })
+
+
+            // Change Password
+
+            .addCase(changePassword.pending, (state) => {
+                state.changePasswordStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(changePassword.fulfilled, (state) => {
+                state.changePasswordStatus = ACTION_STATUS.SUCCESSED;
+            })
+            .addCase(changePassword.rejected, (state) => {
+                state.changePasswordStatus = ACTION_STATUS.FAILED;
+            })
+
+            // cofirm email
+
+            .addCase(confirmEmail.pending, (state) => {
+                state.confirmEmailStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(confirmEmail.fulfilled, (state) => {
+                state.confirmEmailStatus = ACTION_STATUS.SUCCESSED;
+            })
+            .addCase(confirmEmail.rejected, (state) => {
+                state.confirmEmailStatus = ACTION_STATUS.FAILED;
+            })
+
+            // forgot password
+
+            .addCase(forgotPassword.pending, (state) => {
+                state.forgotPasswordStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(forgotPassword.fulfilled, (state) => {
+                state.forgotPasswordStatus = ACTION_STATUS.SUCCESSED;
+            })
+            .addCase(forgotPassword.rejected, (state) => {
+                state.forgotPasswordStatus = ACTION_STATUS.FAILED;
+            })
+
+            // reset password
+
+            .addCase(resetPassword.pending, (state) => {
+                state.resetPasswordStatus = ACTION_STATUS.LOADING;
+            })
+            .addCase(resetPassword.fulfilled, (state) => {
+                state.resetPasswordStatus = ACTION_STATUS.SUCCESSED;
+            })
+            .addCase(resetPassword.rejected, (state) => {
+                state.resetPasswordStatus = ACTION_STATUS.FAILED;
+            })
+
     }
 });
 
 const { reducer, actions } = authSlice;
-export const { logout } = actions;
+export const { logout, resetConfirmEmailStatus, resetResetPasswordStatus } = actions;
 
 export default reducer;

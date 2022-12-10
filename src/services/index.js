@@ -8,3 +8,4 @@ export { default as categoryApi } from './categoryApi';
 export { default as searchApi } from './searchApi';
 export { default as checkoutApi } from './checkoutApi';
 export { default as commentApi } from './commentApi';
+export { default as transactionApi } from './transactionApi';

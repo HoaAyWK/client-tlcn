@@ -14,3 +14,6 @@ export { default as JobManagement } from './JobManagement';
 export { default as ApplyManagement } from './ApplyManagement';
 export { default as FreelancerDetail } from './FreelancerDetail';
 export { default as EmployerDetail } from './EmployerDetail';
+export { default as confirmEmail } from './ConfrimEmail';
+export { default as ForgotPassword } from './ForgotPassword';
+export { default as ResetPassword } from './ResetPassword';

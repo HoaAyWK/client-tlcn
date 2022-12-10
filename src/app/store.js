@@ -13,6 +13,7 @@ import userReducer from '../features/userDetail/userSlice'
 import appliedReducer from '../features/applied/appliedSlice';
 import commentReducer from '../features/comment/commentSlice';
 import employerReducer from '../features/employers/employerSlice';
+import transactionReducer from '../features/transactions/transactionSlice';
 
 export const store = configureStore({
     reducer: {
@@ -29,5 +30,6 @@ export const store = configureStore({
         applied: appliedReducer,
         comments: commentReducer,
         employers: employerReducer,
+        transactions: transactionReducer,
     },
 });

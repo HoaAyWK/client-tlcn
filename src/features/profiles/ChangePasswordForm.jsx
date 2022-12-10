@@ -7,8 +7,12 @@ import { Box, Paper, Stack, InputAdornment, IconButton } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 import { RHFTextField, FormProvider } from '../../components/hook-form';
-
 import { Iconify } from '../../components';
+import { changePassword, logout } from '../auth/authSlice';
+import { useSnackbar } from 'notistack';
+import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 
 const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
     backgroundColor: theme.palette.success.dark,
@@ -18,10 +22,13 @@ const LoadingButtonStyle = styled(LoadingButton)(({ theme }) => ({
     color: '#fff'
 }));
 
-const ChangePasswordFrom = (props) => {
-    const { user } = props;
+const ChangePasswordFrom = () => {
+    const { user } = useSelector(state => state.auth);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmNewPassword, setConfirmShowNewPassword] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const UserSchema = Yup.object().shape({
         id: Yup.string().required(),
@@ -50,13 +57,26 @@ const ChangePasswordFrom = (props) => {
 
     const onSubmit = async (data) => {
         console.log(data);
+        try {
+            const actionResult = await dispatch(changePassword(data));
+            const result = unwrapResult(actionResult);
+
+            if (result) {
+                enqueueSnackbar('Changed password successfully. Please, login again!', { variant: 'success' });
+                dispatch(logout());
+                navigate('/');
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
     };
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
             <Stack spacing={2}>
                 <RHFTextField name='oldPassword' label='Old Password *' type='password' />
-                <RHFTextField name='newPassword' label='New Password *' type='password'
+                <RHFTextField name='newPassword' label='New Password *'
+                    type={showNewPassword ? 'text' : 'password'}
                     InputProps={{
                         endAdornment: (
                         <InputAdornment position="end">
@@ -67,7 +87,8 @@ const ChangePasswordFrom = (props) => {
                         ),
                     }}
                 />
-                <RHFTextField name='confirmNewPassword' label='Cofirm New Password *' type='password'
+                <RHFTextField name='confirmNewPassword' label='Cofirm New Password *'
+                    type={showConfirmNewPassword ? 'text' : 'password'}
                     InputProps={{
                         endAdornment: (
                         <InputAdornment position="end">

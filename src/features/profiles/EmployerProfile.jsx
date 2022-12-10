@@ -29,6 +29,9 @@ import UpdateEmployerForm from './UpdateEmployerForm';
 import MyCommentTable from '../comment/MyCommentTable';
 import { getReceiverComments, getSenderComments } from '../comment/commentSlice';
 import EOCommentTable from '../comment/EOComentTable';
+import { getMyTransactions } from '../transactions/transactionSlice';
+import TransactionTable from '../transactions/TransactionTable';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,
@@ -81,6 +84,8 @@ const EmployerProfile = () => {
     const [openEOComments, setOpenEOComents] = useState(true);
     const { user, employer, userSkills } = useSelector(state => state.auth);
     const { senderComments, receiverComments } = useSelector(state => state.comments);
+    const { transactions } = useSelector(state => state.transactions);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -89,6 +94,20 @@ const EmployerProfile = () => {
             dispatch(getReceiverComments(user.id));
         }
     }, [user]);
+
+    useEffect(() => {
+        async function fetchTransactions() {
+            try {
+                const actionResult = await dispatch(getMyTransactions());
+                const result = unwrapResult(actionResult);
+
+            } catch (error) {
+                
+            }
+        }
+
+        fetchTransactions();
+    }, [dispatch]);
 
     const handleChangeValue = (e, newValue) => {
         setValue(newValue);
@@ -128,6 +147,16 @@ const EmployerProfile = () => {
                         <Typography variant='body2' color='text.secondary'>Employer</Typography>
                         <Stack direction='row'>
                             <Rating name="rating" value={user?.stars} readOnly precision={0.5} sx={{ marginBlock: 2 }} />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Typography variant='body1' color='text.secondary'>
+                                    {`(${user?.numRating ? user?.numRating : '0'})`}
+                                </Typography>
+                            </Box>
                         </Stack>
                     </Box>
                     <Box sx={{ paddingInline: 2 }}>
@@ -298,7 +327,12 @@ const EmployerProfile = () => {
                             </Collapse>
                         </TabPanel>
                         <TabPanel value='5'>
-                            Hello
+                            <Typography variant='h6' color='text.secondary' sx={{ marginBlock: 2 }}>
+                                Transactions History
+                            </Typography>
+                            {transactions?.length > 0 && (
+                                <TransactionTable transactions={transactions} />
+                            )}
                         </TabPanel>
                     </TabContext>
                 </PaperStyle>

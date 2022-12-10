@@ -16,10 +16,13 @@ import {
     JobManagement,
     ApplyManagement,
     FreelancerDetail,
-    EmployerDetail
+    EmployerDetail,
+    ForgotPassword,
+    ResetPassword
 } from './pages';
 
 import Layout from './layouts/Layout';
+import ConfrimEmail from './pages/ConfrimEmail';
 
 
 const Router = () => {
@@ -44,8 +47,19 @@ const Router = () => {
                 { path: 'checkout', element: <SuccessPayment />},
                 { path: 'messaging', element: <Messaging />},
                 { path: 'manage-jobs', element: <JobManagement />},
-                { path: 'my-applies', element: <ApplyManagement />},
+                { path: 'my-applies', element: <ApplyManagement />},   
             ]
+        },
+        {
+            path: '/email/confirm/:token',
+            element: <ConfrimEmail />
+        },
+        {
+            path: '/password/reset/:token',
+            element: <ResetPassword />
+        },
+        {   path: 'forgot-password',
+            element: <ForgotPassword />
         },
         {
             path: '/404',

@@ -123,6 +123,16 @@ const FreelancerProfile = () => {
                         <Typography variant='body2' color='text.secondary'>Freelancer</Typography>
                         <Stack direction='row'>
                             <Rating name="rating" value={user?.stars} readOnly precision={0.5} sx={{ marginBlock: 2 }} />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Typography variant='body1' color='text.secondary'>
+                                    {`(${user?.numRating ? user?.numRating : '0'})`}
+                                </Typography>
+                            </Box>
                         </Stack>
                     </Box>
                     <Box sx={{ paddingInline: 2 }}>

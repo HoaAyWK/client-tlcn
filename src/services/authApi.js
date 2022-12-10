@@ -24,7 +24,22 @@ class AuthApi {
     getCurrentUser = () => {
         const url = '/users/profile';
         return axiosClient.get(url);
-    }
+    };
+
+    confirmEmail = (data) => {
+        const url = `/account/confirmEmail?token=${data}`;
+        return axiosClient.get(url);
+    };
+
+    forgotPassword = (data) => {
+        const url = `/account/password/forgot`;
+        return axiosClient.post(url, data);
+    };
+
+    resetPassword = (token) => {
+        const url = `/account/password/reset?token=${token}`;
+        return axiosClient.get(url);
+    };
 };
 
 export default new AuthApi();

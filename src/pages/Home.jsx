@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Grid } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -10,12 +10,14 @@ import GuestBanner from '../features/home/GuestBanner';
 import EmployerBanner from '../features/home/EmployerBanner';
 import LatestJobsList from '../features/jobs/LatestJobsList';
 import TopListFreelancer from '../features/freelancers/TopListFreelancer';
+import ConfirmEmailDialog from '../features/auth/ConfirmEmailDialog';
 
 
 const Home = () => {
+    const [openConfirm ,setOpenConfirm] = useState(false);
     const categories = useSelector(selectAllCategories);
     const { status: loadCategoriesStatus, countPerCates } = useSelector(state => state.categories);
-    const { user } = useSelector(state => state.auth);
+    const { user, confirmEmailStatus } = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
 
@@ -24,6 +26,16 @@ const Home = () => {
             dispatch(getCategories());
         }
     }, [loadCategoriesStatus, dispatch]);
+
+    useEffect(() => {
+        if (confirmEmailStatus === ACTION_STATUS.SUCCESSED) {
+            setOpenConfirm(true);
+        }
+    }, [confirmEmailStatus]);
+
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+    };
 
     return (
         <Page title='Home'>
@@ -63,6 +75,7 @@ const Home = () => {
                         ))
                     )}
                 </Grid>
+                <ConfirmEmailDialog open={openConfirm} handleClose={handleCloseConfirm} />
             </Container>
         </Page>
     )
