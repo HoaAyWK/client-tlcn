@@ -94,6 +94,7 @@ const FreelancerDetail = () => {
         navigate('/profile', { replace: true });
     }
     
+    console.log(freelancer);
 
     return (
         <Page title={`Freelancer ${freelancer?.firstName} ${freelancer.lastName}`}>

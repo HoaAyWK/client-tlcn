@@ -32,6 +32,7 @@ import EOCommentTable from '../comment/EOComentTable';
 import { getMyTransactions } from '../transactions/transactionSlice';
 import TransactionTable from '../transactions/TransactionTable';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { nextDay } from 'date-fns/esm';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,
@@ -89,8 +90,17 @@ const EmployerProfile = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        async function fetchSenderComments(id) {
+            try {
+                const actionResutl = await dispatch(getSenderComments(id));
+                const result = unwrapResult(actionResutl);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         if (user?.id) {
-            dispatch(getSenderComments(user.id));
+            fetchSenderComments(user.id);
             dispatch(getReceiverComments(user.id));
         }
     }, [user]);
@@ -100,7 +110,7 @@ const EmployerProfile = () => {
             try {
                 const actionResult = await dispatch(getMyTransactions());
                 const result = unwrapResult(actionResult);
-
+                console.log(result);
             } catch (error) {
                 
             }
