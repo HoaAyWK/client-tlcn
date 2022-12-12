@@ -32,7 +32,6 @@ import EOCommentTable from '../comment/EOComentTable';
 import { getMyTransactions } from '../transactions/transactionSlice';
 import TransactionTable from '../transactions/TransactionTable';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { nextDay } from 'date-fns/esm';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,

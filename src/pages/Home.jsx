@@ -18,10 +18,10 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
     borderRadius: '0%',
     padding: 2,
     [theme.breakpoints.up('xs')]: {
-        with: 100,
+        width: 100,
         height: 'auto'
     },
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
         width: 150,
         height: 'auto'
     },
