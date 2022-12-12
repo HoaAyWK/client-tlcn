@@ -4,14 +4,13 @@ import { styled } from '@mui/material/styles';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import { LoadingButton } from '@mui/lab';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useSnackbar } from 'notistack';
 
 import { FormProvider, RHFTextField } from '../../components/hook-form';
-import { addComment, getReceiverComments } from './commentSlice';
+import { addComment, getReceiverComments, getSenderComments } from './commentSlice';
 
 const PaperStyle = styled(Paper)(({ theme }) => ({
     color: theme.palette.main,
@@ -66,6 +65,7 @@ const AddComment = ({ receiver, getSingleAction }) => {
                     enqueueSnackbar('Added comment', { variant: 'success' });
                     dispatch(getSingleAction(id));
                     dispatch(getReceiverComments(receiver));
+                    dispatch(getSenderComments(user.id));
                     setRatingValue(1);
                     reset();
                 }

@@ -26,7 +26,6 @@ const TABLE_HEAD = [
     { id: 'star', label: 'Star', alignRight: false },
     { id: 'content', label: 'Content', alignRight: false },
     { id: 'createdAt', label: 'Commented At', alignRight: false },
-    { id: '', label: '', alignRight: false }
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -191,17 +190,6 @@ const MyCommentTable = ({ comments }) => {
                             </TableCell>
                             <TableCell width={200} align="left">
                                 {fDate(createdAt)}
-                            </TableCell>
-                            <TableCell align="right">
-                                <Tooltip title='Details'>
-                                    <IconButton
-                                        onClick={() => (
-                                            navigate(`/job-detail/${_id}`)
-                                        )}
-                                    >
-                                        <Iconify icon='gg:details-more' width={24} height={24} />
-                                    </IconButton>
-                                </Tooltip>
                             </TableCell>
                         </TableRow>
                         );
