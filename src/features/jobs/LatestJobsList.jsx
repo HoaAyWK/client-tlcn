@@ -47,7 +47,7 @@ const LatestJobsList = () => {
                 {latestJobs?.length > 0 && (
                     <>
                         <Stack spacing={3}>
-                            {latestJobs.map((job, index) => (
+                            {latestJobs.slice(0, 5).map((job, index) => (
                                 <JobItem key={job.id} job={job} categories={latestJobCategories?.[index]} />
                             ))}
                         </Stack>

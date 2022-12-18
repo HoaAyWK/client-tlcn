@@ -35,7 +35,7 @@ export const createJob = createAsyncThunk(
 export const getLatestJobs = createAsyncThunk(
     'jobs/latestJobs',
     async () => {
-        const res =  await jobApi.getJobs(5, 1);
+        const res =  await jobApi.getJobs();
         console.log(res);
         return res;
     }

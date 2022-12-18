@@ -10,7 +10,7 @@ import JobInfoLine from '../features/jobs/JobInfoLine'
 import { fDate } from '../utils/formatTime'
 import { Page, Label, Loading, LetterAvatar, ShowMoreParagraph } from '../components'
 import { jobDetail } from '../features/jobs/jobSlice';
-import { checkApply } from '../features/applied/appliedSlice';
+import { checkApply, getMyApplies } from '../features/applied/appliedSlice';
 import { ACTION_STATUS, ROLES } from '../constants';
 import Apply from '../features/applied/Apply';
 import socket from '../services/socket';
@@ -30,8 +30,10 @@ function JobDetail() {
     const dispatch = useDispatch()
     const { job, jobApplies, jobCategories, jobDetailStatus } = useSelector(state => state.jobs);
     const { user, employer, freelancer } = useSelector(state => state.auth);
+    const { myApplyIds, getMyAppliesStatus } = useSelector((state) => state.applied);
     const { id } = useParams();
     const { enqueueSnackbar } = useSnackbar();
+    const today = new Date();
 
     useEffect(() => {
         if (id) {
@@ -40,6 +42,12 @@ function JobDetail() {
         }
         
     }, [id, dispatch]);
+
+    useEffect(() => {
+        if (freelancer && getMyAppliesStatus === ACTION_STATUS.IDLE) {
+            dispatch(getMyApplies(1));
+        }
+    }, [freelancer, dispatch, getMyAppliesStatus]);
 
     const handleApply = async (e) => {
         if (!freelancer || !user) {
@@ -170,13 +178,31 @@ function JobDetail() {
                                         )}
                                     </Box>
                                     {user?.role !== ROLES.EMPLOYER && (
-                                        <Button
-                                            variant='contained'
-                                            onClick={handleApply}
-                                            value={job?._id}
-                                        >
-                                            Apply
-                                        </Button>
+                                        new Date(job?.expireDate) < today ? (
+                                            <Button
+                                                variant='contained'
+                                                disabled
+                                            >
+                                                Expired
+                                            </Button>
+                                        ) : (
+                                            myApplyIds.includes(job?._id) ? (
+                                                <Button
+                                                    variant='contained'
+                                                    disabled
+                                                >
+                                                    Applied
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant='contained'
+                                                    onClick={handleApply}
+                                                    value={job?._id}
+                                                >
+                                                    Apply
+                                                </Button>
+                                            )
+                                        )
                                     )}
                                 </PaperStyle>
                                 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Box, Grid, Paper, Tab, Typography, Divider } from '@mui/material';
+import { Container, Box, Grid, Paper, Tab, Typography, Divider, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
@@ -68,13 +68,24 @@ const JobManagement = () => {
     return (
         <Page title='Jobs Management'>
             <Container maxWidth='lg'>
-                <Typography
-                    variant='h4'
-                    color='text.secondary'
-                    sx={{ marginBlock: 2 }}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBlock: 2
+                    }}
                 >
-                    Manage Jobs
-                </Typography>
+                    <Typography
+                        variant='h4'
+                        color='text.secondary'
+                    >
+                        Manage Jobs
+                    </Typography>
+                    <Button variant='outlined' disabled size='large'>
+                        {`${employer?.canPost} remaining ${employer?.canPost > 1 ? 'posts' : 'post'}`}
+                    </Button>
+                </Box>
                 <Divider sx={{ marginBlockEnd: 2 }} />
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>

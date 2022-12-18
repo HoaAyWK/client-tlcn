@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Box, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { Page } from '../components';
 import { JobForm } from '../features/jobs';
+import { useSelector } from 'react-redux';
+import { useLocalStorage } from '../hooks';
+import { useNavigate } from 'react-router-dom';
+import { ACTION_STATUS } from '../constants';
 
 const BoxTitleAreaStyle = styled(Box)(({ theme }) => ({
     position: 'relative',
@@ -26,6 +30,21 @@ const PaperStyle = styled(Paper)(({ theme }) => ({
 }));
 
 const CreateJob = () => {
+    const [accessToken] = useLocalStorage('accessToken', null);
+    const { user, employer, getCurrentUserStatus } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!accessToken) {
+            navigate('/404', { replace: true });
+        }
+
+        if (getCurrentUserStatus === ACTION_STATUS.SUCCESSED || !employer) {
+            navigate('/404', { replace: true });
+        }
+    }, [accessToken, navigate, getCurrentUserStatus, employer]);
+
+
     return (
         <Page title={'Create Job'}>
             <Box
@@ -52,6 +71,9 @@ const CreateJob = () => {
                         >
                             <Typography sx={{ fontSize: '2rem', color: 'white', fontWeight: 600, textTransform: 'uppercase' }}>
                                 Create New Job
+                            </Typography>
+                            <Typography variant='h6' sx={{ color: 'white' }}>
+                               {`${employer?.canPost} remaining ${employer?.canPost > 1 ? 'posts' : 'post'}`}  
                             </Typography>
                         </Box>
                     </Container>

@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import {
     Button,
     Card,
-    CardContent,
     CardMedia,
     Box,
     Typography,
     Stack,
-    CardActionArea
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +17,8 @@ import { Iconify, Label } from '../../components';
 import { fDate } from '../../utils/formatTime'
 import socket from '../../services/socket';
 import { addApply } from '../applied/appliedSlice';
+import { getMyApplies } from '../applied/appliedSlice';
+import { ACTION_STATUS } from '../../constants';
 
 const ButtonStyle = styled(Button)(({ theme }) => ({
     color: '#fff'
@@ -74,6 +74,14 @@ const JobItem = ({ job, categories }) => {
     const { user, freelancer } = useSelector(state => state.auth);
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
+    const { myApplyIds, getMyAppliesStatus } = useSelector(state => state.applied);
+    const today = new Date();
+
+    useEffect(() => {
+        if (freelancer && getMyAppliesStatus === ACTION_STATUS.IDLE) {
+            dispatch(getMyApplies(1));
+        }
+    }, [getMyAppliesStatus, freelancer, dispatch]);
 
     const handleClickApply = async (e) => {
         if (!user) {
@@ -194,14 +202,33 @@ const JobItem = ({ job, categories }) => {
                         {fDate(job?.expireDate)}
                     </Typography>
                 </Stack>
-                <ButtonStyle
-                    color='success'
-                    variant='contained'     
-                    onClick={handleClickApply}
-                    value={job?.id}
-                >
-                    Apply
-                </ButtonStyle>
+                {new Date(job?.expireDate) < today ? (
+                    <ButtonStyle
+                        color='success'
+                        variant='contained'     
+                        disabled
+                    >
+                        Expired
+                    </ButtonStyle>
+                ) : (
+                    myApplyIds.includes(job?.id) ? (
+                        <Button
+                            variant='contained'
+                            disabled
+                        >
+                            Applied
+                        </Button>
+                    ) : (
+                        <ButtonStyle
+                            color='success'
+                            variant='contained'     
+                            onClick={handleClickApply}
+                            value={job?.id}
+                        >
+                            Apply
+                        </ButtonStyle>
+                    )
+                )}
             </ItemButton>
         </Wrapper>
     );

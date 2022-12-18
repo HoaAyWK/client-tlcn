@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
     Box, 
     Card, 
@@ -18,9 +18,10 @@ import { Iconify, Label } from '../../components';
 import { fDate } from '../../utils/formatTime';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { addApply } from '../applied/appliedSlice';
+import { addApply, getMyApplies } from '../applied/appliedSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import socket from '../../services/socket';
+import { ACTION_STATUS } from '../../constants';
 
 
 const AvatarSyle = styled(Avatar)(({ theme }) => ({
@@ -34,7 +35,14 @@ function ItemResult({ item }) {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { user, freelancer } = useSelector(state => state.auth);
+    const { myApplyIds, getMyAppliesStatus } = useSelector(state => state.applied);
+    const today = new Date();
 
+    useEffect(() => {
+        if (freelancer && getMyAppliesStatus === ACTION_STATUS.IDLE) {
+            dispatch(getMyApplies(1));
+        }
+    }, [getMyAppliesStatus, freelancer, dispatch]);
 
     const handleApply = async (e) => {
         if (!user) {
@@ -181,14 +189,32 @@ function ItemResult({ item }) {
                         {fDate(item?.expireDate)}
                     </Typography>
                 </Stack>
-                <Button
-                    size="small"
-                    color="primary"
-                    onClick={handleApply}
-                    value={item?._id}
-                >
-                    {'Apply Now >>>'}
-                </Button>
+                {new Date(item?.expireDate) < today ? (
+                    <Button
+                        size='small'
+                        disabled
+                    >
+                        Expired
+                    </Button>
+                ) : (
+                    myApplyIds.includes(item?._id) ? (
+                        <Button
+                            size='small'
+                            disabled
+                        >
+                            Applied
+                        </Button>
+                    ) : (
+                        <Button
+                            size="small"
+                            color="primary"
+                            onClick={handleApply}
+                            value={item?._id}
+                        >
+                            {'Apply Now >>>'}
+                        </Button>
+                    )
+                )}
             </CardActions>
         </Card>
     );

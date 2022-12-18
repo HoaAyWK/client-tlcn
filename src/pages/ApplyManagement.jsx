@@ -83,7 +83,7 @@ const ApplyManagement = () => {
                 <Divider sx={{ marginBlockEnd: 2 }} />
                 <PaperStyle>
                     {myApplies?.length > 0 ? (
-                        <Stack spacing={2}>
+                        <Stack spacing={2} sx={{ marginBlockEnd: 5 }}>
                             {myApplies.map((apply) => (
                                 <JobApply apply={apply} key={apply?._id} />
                             ))}
@@ -108,10 +108,10 @@ const ApplyManagement = () => {
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'flex-end',
-                                marginBlock: 2,
+                                marginBlockEnd: 2,
                                 position: 'absolute',
                                 bottom: 0,
-                                right: 10
+                                right: 10,
                             }}
                         >
                             <Pagination

@@ -6,8 +6,8 @@ class JobApi {
         return axiosClient.post(url, data);
     };
 
-    getJobs = (num, page) => {
-        const url = `/job/show?num=${num}&page=${page}`;
+    getJobs = () => {
+        const url = `/job/latest`;
         return axiosClient.get(url);
     };
 

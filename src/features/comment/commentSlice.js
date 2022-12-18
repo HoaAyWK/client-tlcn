@@ -86,4 +86,6 @@ const commentSlice = createSlice({
 
 const { actions, reducer } = commentSlice;
 
+// fetch data using createAsyncThunk
+
 export default reducer;

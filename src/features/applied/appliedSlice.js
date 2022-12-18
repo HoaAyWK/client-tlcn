@@ -8,6 +8,7 @@ const initialState = {
     createApplyStatus: ACTION_STATUS.IDLE,
     getMyAppliesStatus: ACTION_STATUS.IDLE,
     myApplies: [],
+    myApplyIds: [],
     totalMAPage: 0,
     totalMAItem: 0,
 }
@@ -79,6 +80,7 @@ const appliedSlice = createSlice({
                 state.myApplies = action.payload.applies;
                 state.totalMAItem = action.payload.totalItem;
                 state.totalMAPage = action.payload.totalPage;
+                state.myApplyIds = action.payload.applies.map((a) => a.job._id);
             })
             .addCase(getMyApplies.rejected, (state) => {
                 state.getMyAppliesStatus = ACTION_STATUS.FAILED
