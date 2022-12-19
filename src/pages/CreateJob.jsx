@@ -39,7 +39,7 @@ const CreateJob = () => {
             navigate('/404', { replace: true });
         }
 
-        if (getCurrentUserStatus === ACTION_STATUS.SUCCESSED || !employer) {
+        if (getCurrentUserStatus === ACTION_STATUS.SUCCESSED && !employer) {
             navigate('/404', { replace: true });
         }
     }, [accessToken, navigate, getCurrentUserStatus, employer]);
